@@ -2,7 +2,7 @@
 % Please edit documentation in R/timeseries.R
 \name{to_ts}
 \alias{to_ts}
-\title{Creates a time series object}
+\title{Creates a JDemetra+ time series object}
 \usage{
 to_ts(source, id, type = "All")
 }
@@ -19,10 +19,11 @@ An object of type "JD3_TS". List containing the identifiers,
 the data and the metadata
 }
 \description{
-Creates a time series object
+A JDemetra+ specific object is useful when working with JDemetra+ workspaces
+(see rjd3workspace)
 }
 \examples{
-\dontshow{if (current_java_version >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
 source <- "Txt"
 # id is split due to length restrictions
 id1 <- "demetra://tsprovider/Txt/20111201/SERIES?datePattern=dd\%2FMM\%2Fyyyy&delimiter=SEMICOLON&"

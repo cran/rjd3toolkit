@@ -25,9 +25,9 @@ squared-gain function (with the same number of points as the spectrum)
 Wiener Kolmogorov Estimators
 }
 \examples{
-\dontshow{if (current_java_version >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
 mod1 <- arima_model("trend", delta = c(1, -2, 1))
-mod2 <- arima_model("noise", var = 1600)
+mod2 <- arima_model("noise", variance = 1600)
 hp <- ucarima_model(components = list(mod1, mod2))
 wk1 <- ucarima_wk(hp, 1, nwk = 50)
 wk2 <- ucarima_wk(hp, 2)

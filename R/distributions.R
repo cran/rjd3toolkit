@@ -1,4 +1,4 @@
-#' @title The Student Distribution
+#' @title Student Distribution
 #'
 #' @description
 #' Probability Density Function (PDF), Cumulative Density Function (CDF) and generation of random variables following a Student distribution.
@@ -11,7 +11,7 @@
 #' The functions density_XXX and cdf_t return numeric vectors of same length as \code{x}.
 #' The functions random_XXX return random number (numeric vectors) of length \code{n}.
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #' # Probability density function of T with 2 degrees of freedom.
 #' z <- density_t(df = 2, .01 * seq(-100, 100, 1))
 #' # Generating a random vector with each component drawn from a T(2) distribution
@@ -44,10 +44,11 @@ cdf_t <- function(df, x) {
     .jcall("jdplus/toolkit/base/r/stats/Distributions", "[D", "cdfT", df, .jarray(as.numeric(x)))
 }
 
-#' @title The Chi-Squared Distribution
+#' @title Chi-Squared Distribution
 #'
 #' @description
 #' Density, (cumulative) distribution function and random generation for chi-squared distribution.
+#' @return numeric vector
 #'
 #' @inheritParams studentdistribution
 #'
@@ -59,7 +60,7 @@ cdf_t <- function(df, x) {
 #' @rdname chi2distribution
 #' @order 3
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #' density_chi2(df = 3, 1:10)
 #' cdf_chi2(df = 3, 1:10)
 #' random_chi2(df = 3, n = 10)
@@ -83,13 +84,14 @@ cdf_chi2 <- function(df, x) {
     .jcall("jdplus/toolkit/base/r/stats/Distributions", "[D", "cdfChi2", df, .jarray(as.numeric(x)))
 }
 
-#' @title The Gamma Distribution
+#' @title Gamma Distribution
 #'
 #' @description
 #' Density, (cumulative) distribution function and random generation for Gamma distribution.
 #'
 #' @inheritParams studentdistribution
 #' @param shape,scale shape and scale parameters.
+#' @return numeric vector
 #'
 #' @returns
 #' The functions density_XXX and cdf_t return numeric vectors of same length as \code{x}.
@@ -98,7 +100,7 @@ cdf_chi2 <- function(df, x) {
 #' @name gammadistribution
 #' @rdname gammadistribution
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #' density_gamma(shape = 1, scale = 2, x = 1:10)
 #' cdf_gamma(shape = 1, scale = 2, x = 1:10)
 #' random_gamma(shape = 1, scale = 2, n = 10)
@@ -123,10 +125,11 @@ cdf_gamma <- function(shape, scale, x) {
     .jcall("jdplus/toolkit/base/r/stats/Distributions", "[D", "cdfGamma", shape, scale, .jarray(as.numeric(x)))
 }
 
-#' @title The Inverse-Gamma Distribution
+#' @title Inverse-Gamma Distribution
 #'
 #' @description
 #' Density, (cumulative) distribution function and random generation for inverse-gamma distribution.
+#' @return numeric vector
 #'
 #' @inheritParams gammadistribution
 #'
@@ -138,7 +141,7 @@ cdf_gamma <- function(shape, scale, x) {
 #' @rdname invgammadistribution
 #' @order 3
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #' density_inverse_gamma(shape = 1, scale = 2, x = 1:10)
 #' cdf_inverse_gamma(shape = 1, scale = 2, x = 1:10)
 #' random_inverse_gamma(shape = 1, scale = 2, n = 10)
@@ -161,10 +164,11 @@ cdf_inverse_gamma <- function(shape, scale, x) {
     .jcall("jdplus/toolkit/base/r/stats/Distributions", "[D", "cdfInverseGamma", shape, scale, .jarray(as.numeric(x)))
 }
 
-#' @title The Inverse-Gaussian Distribution
+#' @title Inverse-Gaussian Distribution
 #'
 #' @description
 #' Density, (cumulative) distribution function and random generation for inverse-gaussian distribution.
+#' @return numeric vector
 #'
 #' @inheritParams gammadistribution
 #'
@@ -176,7 +180,7 @@ cdf_inverse_gamma <- function(shape, scale, x) {
 #' @rdname invgaussiandistribution
 #' @order 3
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #' density_inverse_gaussian(shape = 1, scale = 2, x = 1:10)
 #' random_inverse_gaussian(shape = 1, scale = 2, n = 10)
 #'

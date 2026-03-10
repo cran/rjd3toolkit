@@ -27,7 +27,7 @@
 #' after the decomposition: "AO" and "TC" to the irregular, "LS" and Ramps to
 #' the trend.
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #'
 #' init_spec <- x13_spec_default
 #'
@@ -290,7 +290,7 @@ remove_ramp.default <- function(x,
 #' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #'
 #' # Customize a default specification
 #' init_spec <- x13_spec_default
@@ -410,7 +410,7 @@ set_basic.default <- function(x,
 #' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #' # Customize a default specification
 #' init_spec <- tramoseats_spec_default
 #' new_spec <- set_estimate(
@@ -537,7 +537,7 @@ set_estimate.default <- function(x,
 #' allocated to a pre-defined component after the decomposition: "AO" and "TC"
 #' to the irregular, "LS" to the trend and "SO" to seasonal component.
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #'
 #' # Customize a default specification
 #' init_spec <- tramoseats_spec_default
@@ -769,7 +769,7 @@ set_outlier.default <- function(x,
 #' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #'
 #' # Customize a default specification
 #' init_spec <- x13_spec_default
@@ -911,7 +911,7 @@ set_automodel.default <- function(x,
 #' generated with \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #' @seealso \code{\link{set_automodel}}, \code{\link{set_transform}}
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #' # Customize a default specification
 #' init_spec <- x13_spec_default
 #'
@@ -1176,7 +1176,7 @@ set_arima.default <- function(x,
 #' More information on calendar correction in JDemetra+ online documentation:
 #' \url{https://jdemetra-new-documentation.netlify.app/a-calendar-correction}
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #' # Pre-defined regressors
 #' y_raw <- ABS$X0.2.09.10.M
 #'
@@ -1517,7 +1517,7 @@ set_tradingdays.default <- function(x,
 #' @references
 #' More information on calendar correction in JDemetra+ online documentation:
 #' \url{https://jdemetra-new-documentation.netlify.app/a-calendar-correction}
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #'
 #' # Customize a default specification
 #' init_spec <- x13_spec_default
@@ -1655,7 +1655,7 @@ set_easter.default <- function(x, enabled = NA,
 #' More information in JDemetra+ online documentation:
 #' \url{https://jdemetra-new-documentation.netlify.app/}
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #' # Customize a default specification
 #' init_spec <- x13_spec_default
 #' new_spec <- set_transform(x = init_spec, fun = "Log", outliers = TRUE)
@@ -1756,7 +1756,7 @@ set_transform.default <- function(x,
 #'   \item \code{"SeasonallyAdjusted"}: after the decomposition the effect is allocated to the seasonally adjusted series: \eqn{sa_t=T+I+effect}
 #' }
 #'
-#' @examplesIf current_java_version >= minimal_java_version
+#' @examplesIf get_java_version() >= minimal_java_version
 #'
 #' # Creating one or several external regressors (TS objects),
 #' # which will be gathered in one or several groups
@@ -1842,8 +1842,8 @@ set_span <- function(x,
                      type = c("All", "From", "To", "Between", "Last", "First", "Excluding"),
                      d0 = NULL,
                      d1 = NULL,
-                     n0 = 0,
-                     n1 = 0) {
+                     n0 = 0L,
+                     n1 = 0L) {
     if (!missing(type) && !is.null(type) && !is.na(type[1])) {
         type <- match.arg(
             toupper(type),
@@ -1851,51 +1851,51 @@ set_span <- function(x,
         )
         if (type == "ALL") {
             x$type <- type
-            x$d1 <- x$d1 <- NULL
-            x$n0 <- x$n1 <- 0
+            x[c("d0", "d1")] <- list(NULL, NULL)
+            x$n0 <- x$n1 <- 0L
         } else if (type == "FROM") {
             if (is.null(d0)) {
                 warning("d0 parameter must be defined")
             } else {
                 x$type <- type
-                x$d0 <- d0
-                x$d1 <- NULL
-                x$n0 <- x$n1 <- 0
+                x["d0"] <- list(d0)
+                x["d1"] <- list(NULL)
+                x$n0 <- x$n1 <- 0L
             }
         } else if (type == "TO") {
             if (is.na(d1)) {
                 warning("d1 parameter must be defined")
             } else {
                 x$type <- type
-                x$d1 <- d1
-                x$d0 <- NULL
-                x$n0 <- x$n1 <- 0
+                x["d1"] <- list(d1)
+                x["d0"] <- list(NULL)
+                x$n0 <- x$n1 <- 0L
             }
         } else if (type == "BETWEEN") {
             if (is.na(d0) || is.na(d1)) {
                 warning("d0 and d1 parameters must be defined")
             } else {
                 x$type <- type
-                x$d0 <- d0
-                x$d1 <- d1
-                x$n0 <- x$n1 <- 0
+                x["d0"] <- list(d0)
+                x["d1"] <- list(d1)
+                x$n0 <- x$n1 <- 0L
             }
         } else if (type == "FIRST") {
             if (is.na(n0)) {
                 warning("n0 parameter must be defined")
             } else {
                 x$type <- type
-                x$d0 <- x$d1 <- NULL
+                x[c("d0", "d1")] <- list(NULL, NULL)
                 x$n0 <- n0
-                x$n1 <- 0
+                x$n1 <- 0L
             }
         } else if (type == "LAST") {
             if (is.na(n1)) {
                 warning("n1 parameter must be defined")
             } else {
                 x$type <- type
-                x$d0 <- x$d1 <- NULL
-                x$n0 <- 0
+                x[c("d0", "d1")] <- list(NULL, NULL)
+                x$n0 <- 0L
                 x$n1 <- n1
             }
         } else if (type == "EXCLUDING") {
@@ -1903,7 +1903,7 @@ set_span <- function(x,
                 warning("n0 and n1 parameters must be defined")
             } else {
                 x$type <- type
-                x$d0 <- x$d1 <- NULL
+                x[c("d0", "d1")] <- list(NULL, NULL)
                 x$n0 <- n0
                 x$n1 <- n1
             }

@@ -5,7 +5,7 @@
 \alias{cdf_inverse_gaussian}
 \alias{invgaussiandistribution}
 \alias{random_inverse_gaussian}
-\title{The Inverse-Gaussian Distribution}
+\title{Inverse-Gaussian Distribution}
 \usage{
 density_inverse_gaussian(shape, scale, x)
 
@@ -21,6 +21,8 @@ random_inverse_gaussian(shape, scale, n)
 \item{n}{number of observations.}
 }
 \value{
+numeric vector
+
 The functions density_XXX and cdf_t return numeric vectors of same length as \code{x}.
 The functions random_XXX return random number (numeric vectors) of length \code{n}.
 }
@@ -28,7 +30,7 @@ The functions random_XXX return random number (numeric vectors) of length \code{
 Density, (cumulative) distribution function and random generation for inverse-gaussian distribution.
 }
 \examples{
-\dontshow{if (current_java_version >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
 density_inverse_gaussian(shape = 1, scale = 2, x = 1:10)
 random_inverse_gaussian(shape = 1, scale = 2, n = 10)
 \dontshow{\}) # examplesIf}

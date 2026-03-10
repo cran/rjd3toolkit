@@ -5,7 +5,7 @@
 \alias{cdf_chi2}
 \alias{chi2distribution}
 \alias{random_chi2}
-\title{The Chi-Squared Distribution}
+\title{Chi-Squared Distribution}
 \usage{
 density_chi2(df, x)
 
@@ -21,6 +21,8 @@ random_chi2(df, n)
 \item{n}{number of observations.}
 }
 \value{
+numeric vector
+
 The functions density_XXX and cdf_t return numeric vectors of same length as \code{x}.
 The functions random_XXX return random number (numeric vectors) of length \code{n}.
 }
@@ -28,7 +30,7 @@ The functions random_XXX return random number (numeric vectors) of length \code{
 Density, (cumulative) distribution function and random generation for chi-squared distribution.
 }
 \examples{
-\dontshow{if (current_java_version >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
 density_chi2(df = 3, 1:10)
 cdf_chi2(df = 3, 1:10)
 random_chi2(df = 3, n = 10)
