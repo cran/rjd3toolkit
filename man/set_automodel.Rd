@@ -129,7 +129,7 @@ with \code{rjd3x13::spec_regarima()} or "JD3_TRAMOSEATS_SPEC" generated with
 \code{rjd3tramoseats::spec_tramo()}).
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 
 # Customize a default specification
 init_spec <- x13_spec_default
@@ -138,7 +138,7 @@ new_spec <- set_automodel(x = init_spec, enabled = FALSE, acceptdefault = TRUE)
 }
 \references{
 More information on reg-arima modelling in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/}
+\url{https://doc.jdemetra.org/}
 }
 \seealso{
 \code{\link{set_arima}}, \code{\link{set_transform}}

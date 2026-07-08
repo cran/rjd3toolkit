@@ -62,7 +62,7 @@ for the decomposition.
 }
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 
 # Creating one or several external regressors (TS objects),
 # which will be gathered in one or several groups
@@ -102,7 +102,7 @@ new_spec <- add_usrdefvar(new_spec, name = "reg2.iv2", regeffect = "Trend", coef
 }
 \references{
 More information on outliers and other auxiliary variables in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/}
+\url{https://doc.jdemetra.org/a-outlier-detection}
 }
 \seealso{
 \code{\link{set_tradingdays}}, \code{\link{intervention_variable}}

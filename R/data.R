@@ -1,0 +1,93 @@
+
+#' @title Data Base: Retail trade series in Australia
+#'
+#' @source ABS
+#' @examples
+#' data(ABS)
+"ABS"
+
+#' @title Data Base: US Retail trade series
+#'
+#' @source US-Census Bureau
+#' @examples
+#' data(Retail)
+"Retail"
+
+#' @title Data Base: Belgian exports to European countries
+#'
+#' @source NBB
+#' @examples
+#' data(Exports)
+"Exports"
+
+#' @title Data Base: Belgian imports from European countries
+#'
+#' @source NBB
+#' @examples
+#' data(Imports)
+"Imports"
+
+#' @title Data Base: French national electricity consumption
+#'
+#' @format A data frame with 210384 rows and 3 variables:
+#' \itemize{
+#'   \item Date: Date of the event (from January 1, 2012 to December 31, 2023)
+#'   \item Hours: Timestamp of the event (from 00:00 AM to 11:30 PM)
+#'   \item Consumtion: number of daily birth (29124--102098)
+#' }
+#'
+#' @source <https://www.rte-france.com/en/data-publications/eco2mix/download-indicators>
+#' @examples
+#' data(Electricity)
+"Electricity"
+
+#' @title Data Base: Series of daily births in France from 1968 to 2024
+#'
+#' @description
+#' Daily number of births recorded in France (metropolitan + DOM),
+#' covering the period from January 1st, 1968 to December 31st, 2024.
+#'
+#' @format A data frame with 20,820 rows and 2 variables:
+#' \itemize{
+#'   \item date: Date of the value (from 1968-01-01 to 2024-12-31)
+#'   \item births: Number of daily births (1254--2830)
+#' }
+#'
+#' @details
+#' The dataset corresponds to the INSEE series **T79jnais**.
+#' The raw data can be downloaded as a CSV file here:
+#' <https://www.insee.fr/fr/statistiques/fichier/8582123/T79jnais.csv>
+#'
+#' @source INSEE, Statistiques de l'état civil –
+#' <https://www.insee.fr/fr/statistiques/8582123?sommaire=8582147>
+#'
+#' @examples
+#' data(Births)
+#' plot(Births$date, Births$births,
+#'      type = "l",
+#'      main = "Daily births in France",
+#'      ylab = "Number of births",
+#'      xlab = "date")
+#'
+"Births"
+
+#' @title Default X13 specification ("rsa4")
+#'
+#' @description X13 default specification generated with \{rjd3x13\} used in examples for specification customization functions in \{rjd3toolkit\}
+#' generated with `x13_spec_default <- rjd3x13::x13_spec("rsa4")`
+#'
+#' @seealso the set of functions allowing to customize specifications (\url{https://rjdverse.github.io/rjd3toolkit/reference/index.html#customizing-specifications})
+#'
+#' @examples
+#' data(x13_spec_default)
+#' x13_spec_default
+"x13_spec_default"
+#' @title Default Tramo-Seats specification ("rsafull")
+#'
+#' @description Tramo-Seats default specification generated with \{rjd3tramoseats\} used in examples for specification customization functions in \{rjd3toolkit\}
+#' generated with `tramoseats_spec_default<- rjd3tramoseats::tramoseats_spec("rsafull")`
+#' @seealso the set of functions allowing to customize specifications (\url{https://rjdverse.github.io/rjd3toolkit/reference/index.html#customizing-specifications})
+#' @examples
+#' data(tramoseats_spec_default)
+#' tramoseats_spec_default
+"tramoseats_spec_default"

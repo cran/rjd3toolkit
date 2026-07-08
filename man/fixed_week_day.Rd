@@ -27,14 +27,14 @@ Allows to define a holiday falling on a fixed week day each year, like Labour Da
 USA which is always celebrated on the first Monday of September.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 day <- fixed_week_day(9, 1, 1) # first Monday(1) of September.
 day
 \dontshow{\}) # examplesIf}
 }
 \references{
 More information on calendar correction in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/a-calendar-correction}
+\url{https://doc.jdemetra.org/a-calendar-correction}
 }
 \seealso{
 \code{\link{national_calendar}}, \code{\link{fixed_day}},\code{\link{special_day}},\code{\link{easter_day}}

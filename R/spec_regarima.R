@@ -27,7 +27,7 @@
 #' after the decomposition: "AO" and "TC" to the irregular, "LS" and Ramps to
 #' the trend.
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #'
 #' init_spec <- x13_spec_default
 #'
@@ -44,7 +44,7 @@
 #' @seealso \code{\link{add_usrdefvar}}, \code{\link{intervention_variable}}
 #' @references
 #' More information on outliers and other auxiliary variables in JDemetra+ online documentation:
-#' \url{https://jdemetra-new-documentation.netlify.app/}
+#' \url{https://doc.jdemetra.org/a-outlier-detection}
 #' @export
 add_outlier <- function(x,
                         type,
@@ -290,7 +290,7 @@ remove_ramp.default <- function(x,
 #' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #'
 #' # Customize a default specification
 #' init_spec <- x13_spec_default
@@ -336,7 +336,7 @@ remove_ramp.default <- function(x,
 #' @seealso \code{\link{set_estimate}}, \code{\link{set_arima}}
 #' @references
 #' More information in JDemetra+ online documentation:
-#' \url{https://jdemetra-new-documentation.netlify.app/}
+#' \url{https://doc.jdemetra.org/a-sa-pre-treatment#sa-pre-t-spans}
 #' @export
 set_basic <- function(x,
                       type = c(NA, "All", "From", "To", "Between", "Last", "First", "Excluding"),
@@ -410,7 +410,7 @@ set_basic.default <- function(x,
 #' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' # Customize a default specification
 #' init_spec <- tramoseats_spec_default
 #' new_spec <- set_estimate(
@@ -425,7 +425,7 @@ set_basic.default <- function(x,
 #' @seealso \code{\link{set_basic}}, \code{\link{set_arima}}
 #' @references
 #' More in JDemetra+ online documentation:
-#' \url{https://jdemetra-new-documentation.netlify.app/}
+#' \url{https://doc.jdemetra.org/a-sa-pre-treatment#sa-pre-t-spans}
 #'
 #' @export
 set_estimate <- function(x,
@@ -537,7 +537,7 @@ set_estimate.default <- function(x,
 #' allocated to a pre-defined component after the decomposition: "AO" and "TC"
 #' to the irregular, "LS" to the trend and "SO" to seasonal component.
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #'
 #' # Customize a default specification
 #' init_spec <- tramoseats_spec_default
@@ -545,7 +545,7 @@ set_estimate.default <- function(x,
 #'     x = init_spec,
 #'     span.type = "From",
 #'     d0 = "2012-01-01",
-#'     outliers.type = c("LS", "AO"),
+#'     outliers.type = c("TC", "AO"),
 #'     critical.value = 5,
 #'     tc.rate = 0.85
 #' )
@@ -554,7 +554,7 @@ set_estimate.default <- function(x,
 #'
 #' @references
 #' More information on outliers and other auxiliary variables in JDemetra+ online documentation:
-#' \url{https://jdemetra-new-documentation.netlify.app/}
+#' \url{https://doc.jdemetra.org/a-outlier-detection}
 #'
 #' @export
 #'
@@ -624,7 +624,7 @@ set_outlier.default <- function(x,
         outliers.type <- unique(outliers.type)
         if (is_tramo) {
             outlier$enabled <- TRUE
-            for (out.name in c("ao", "ls", "ts", "so")) {
+            for (out.name in c("ao", "ls", "tc", "so")) {
                 outlier[[out.name]] <- out.name %in% tolower(outliers.type)
             }
         } else {
@@ -769,7 +769,7 @@ set_outlier.default <- function(x,
 #' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #'
 #' # Customize a default specification
 #' init_spec <- x13_spec_default
@@ -779,7 +779,7 @@ set_outlier.default <- function(x,
 #'
 #' @references
 #' More information on reg-arima modelling in JDemetra+ online documentation:
-#' \url{https://jdemetra-new-documentation.netlify.app/}
+#' \url{https://doc.jdemetra.org/}
 #'
 #' @export
 #'
@@ -911,7 +911,7 @@ set_automodel.default <- function(x,
 #' generated with \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #' @seealso \code{\link{set_automodel}}, \code{\link{set_transform}}
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' # Customize a default specification
 #' init_spec <- x13_spec_default
 #'
@@ -935,7 +935,7 @@ set_automodel.default <- function(x,
 #'
 #' @references
 #' More information on reg-arima modelling in JDemetra+ online documentation:
-#' \url{https://jdemetra-new-documentation.netlify.app/}
+#' \url{https://doc.jdemetra.org/}
 #' @export
 set_arima <- function(x,
                       mean = NA,
@@ -1174,9 +1174,9 @@ set_arima.default <- function(x,
 #'
 #' @references
 #' More information on calendar correction in JDemetra+ online documentation:
-#' \url{https://jdemetra-new-documentation.netlify.app/a-calendar-correction}
+#' \url{https://doc.jdemetra.org/a-calendar-correction}
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' # Pre-defined regressors
 #' y_raw <- ABS$X0.2.09.10.M
 #'
@@ -1516,8 +1516,8 @@ set_tradingdays.default <- function(x,
 #' @seealso \code{\link{easter_variable}}, \code{\link{easter_day}}
 #' @references
 #' More information on calendar correction in JDemetra+ online documentation:
-#' \url{https://jdemetra-new-documentation.netlify.app/a-calendar-correction}
-#' @examplesIf get_java_version() >= minimal_java_version
+#' \url{https://doc.jdemetra.org/a-calendar-correction}
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #'
 #' # Customize a default specification
 #' init_spec <- x13_spec_default
@@ -1653,9 +1653,9 @@ set_easter.default <- function(x, enabled = NA,
 #' @seealso \code{\link{set_outlier}}, \code{\link{set_tradingdays}}
 #' @references
 #' More information in JDemetra+ online documentation:
-#' \url{https://jdemetra-new-documentation.netlify.app/}
+#' \url{https://doc.jdemetra.org/a-sa-pre-treatment#sa-pre-t-mode}
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' # Customize a default specification
 #' init_spec <- x13_spec_default
 #' new_spec <- set_transform(x = init_spec, fun = "Log", outliers = TRUE)
@@ -1756,7 +1756,7 @@ set_transform.default <- function(x,
 #'   \item \code{"SeasonallyAdjusted"}: after the decomposition the effect is allocated to the seasonally adjusted series: \eqn{sa_t=T+I+effect}
 #' }
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #'
 #' # Creating one or several external regressors (TS objects),
 #' # which will be gathered in one or several groups
@@ -1796,7 +1796,7 @@ set_transform.default <- function(x,
 #' @seealso \code{\link{set_tradingdays}}, \code{\link{intervention_variable}}
 #' @references
 #' More information on outliers and other auxiliary variables in JDemetra+ online documentation:
-#' \url{https://jdemetra-new-documentation.netlify.app/}
+#' \url{https://doc.jdemetra.org/a-outlier-detection}
 #' @export
 add_usrdefvar <- function(x,
                           group = "r",

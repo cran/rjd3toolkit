@@ -25,7 +25,7 @@ Friedman Seasonality Test
 Non parametric test ("ANOVA"-type).
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 s <- do_stationary(log(ABS$X0.2.09.10.M))$ddata
 seasonality_friedman(s)
 seasonality_friedman(random_t(2, 1000), 12)

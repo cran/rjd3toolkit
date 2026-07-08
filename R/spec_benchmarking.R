@@ -36,7 +36,7 @@
 #'
 #' @returns The modified specification with new estimation span
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' init_spec <- x13_spec_default
 #' new_spec <- set_benchmarking(
 #'     x = init_spec,
@@ -50,7 +50,7 @@
 #'
 #' @references
 #' More information on benchmarking in JDemetra+ online documentation:
-#' \url{https://jdemetra-new-documentation.netlify.app/}
+#' \url{https://doc.jdemetra.org/a-benchmarking}
 #' @export
 set_benchmarking <- function(x, enabled = NA,
                              target = c(NA, "CalendarAdjusted", "Original"),

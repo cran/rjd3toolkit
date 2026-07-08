@@ -53,7 +53,7 @@ by the parameters \code{starts} and \code{ends}. With \code{delta = 1} and \code
 the cumulative sum of temporary level shifts, once differenced the regressor will become a classical level shift.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 iv1 <- intervention_variable(
     frequency = 12,
     start = c(2000, 1),
@@ -89,7 +89,7 @@ new_spec <- add_usrdefvar(init_spec, name = "reg1.iv1", regeffect = "Trend")
 }
 \references{
 More information on auxiliary variables in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/}
+\url{https://jdemetra-new-documentation.netlify.app/a-outlier-detection}
 }
 \seealso{
 \code{\link{modelling_context}}, \code{\link{add_usrdefvar}}

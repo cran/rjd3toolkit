@@ -47,7 +47,7 @@ generated with \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" gene
 \code{rjd3tramoseats::spec_tramo()}).
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 # Customize a default specification
 init_spec <- x13_spec_default
 new_spec <- set_transform(x = init_spec, fun = "Log", outliers = TRUE)
@@ -55,7 +55,7 @@ new_spec <- set_transform(x = init_spec, fun = "Log", outliers = TRUE)
 }
 \references{
 More information in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/}
+\url{https://doc.jdemetra.org/a-sa-pre-treatment#sa-pre-t-mode}
 }
 \seealso{
 \code{\link{set_outlier}}, \code{\link{set_tradingdays}}

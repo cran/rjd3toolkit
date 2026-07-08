@@ -30,13 +30,13 @@ Allows to generate a specific regressor for correcting trading days effects in S
 The regressor will have the value -1 if the w-th day is a Sunday, 1 if it is a Monday as 0 otherwise.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 stock_td(frequency = 12L, start = c(1990L, 1L), length = 480L, w = 1L)
 \dontshow{\}) # examplesIf}
 }
 \references{
 More information on calendar correction in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/a-calendar-correction}
+\url{https://doc.jdemetra.org/a-calendar-correction}
 }
 \seealso{
 \code{\link{calendar_td}}

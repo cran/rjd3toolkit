@@ -53,7 +53,7 @@ This kind of non-aggregated regressors are used for calendar correction in
 daily data.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 BE <- national_calendar(list(
     fixed_day(7, 21),
     special_day("NEWYEAR"),
@@ -72,7 +72,7 @@ plot(apply(q, 1, max))
 }
 \references{
 More information on calendar correction in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/a-calendar-correction}
+\url{https://doc.jdemetra.org/a-calendar-correction}
 }
 \seealso{
 \code{\link{calendar_td}}

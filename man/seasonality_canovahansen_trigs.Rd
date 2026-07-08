@@ -33,7 +33,7 @@ a numeric vector
 Canova-Hansen test using trigonometric variables
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 s <- log(ABS$X0.2.20.10.M)
 freqs <- seq(0.01, 0.5, 0.001)
 sct <- seasonality_canovahansen_trigs(s, 1 / freqs, original = FALSE)

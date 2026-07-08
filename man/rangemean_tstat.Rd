@@ -49,7 +49,7 @@ The function \code{rangemean_tstat} returns the T-statistic associated to \eqn{\
 If it is significantly higher than 0, log transformation is recommended.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 y <- ABS$X0.2.09.10.M
 # Multiplicative pattern
 plot(y)

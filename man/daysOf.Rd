@@ -18,7 +18,7 @@ A list of the starting dates of each period
 Provides a list of dates corresponding to each period of the given time series
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 
 daysOf(Retail$BookStores)
 \dontshow{\}) # examplesIf}

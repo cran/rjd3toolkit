@@ -23,16 +23,23 @@ random_inverse_gamma(shape, scale, n)
 \value{
 numeric vector
 
-The functions density_XXX and cdf_t return numeric vectors of same length as \code{x}.
-The functions random_XXX return random number (numeric vectors) of length \code{n}.
+Functions density_XXX and cdf_XXX return numeric vectors of same length as \code{x}.
+Function random_XXX returns a numeric vector of length \code{n}.
 }
 \description{
-Density, (cumulative) distribution function and random generation for inverse-gamma distribution.
+Density, cumulative distribution function and random generation for inverse-gamma distribution.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
-density_inverse_gamma(shape = 1, scale = 2, x = 1:10)
-cdf_inverse_gamma(shape = 1, scale = 2, x = 1:10)
-random_inverse_gamma(shape = 1, scale = 2, n = 10)
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
+# Probability density function for an Inverse Gamma distribution
+z <-density_inverse_gamma(shape = 1, scale = 2,x=.001 * seq(0, 300, 1))
+# Computing the probability that the random variable X following an Inverse Gamma distribution
+# with shape 1 and scale 2 is lower than x
+z<-cdf_inverse_gamma(shape = 1, scale = 2, x = 1:10)
+z
+# Generating a random vector with each component drawn from an Inverse Gamma distribution
+# with shape 1 and scale 2
+z<- random_inverse_gamma(shape = 1, scale = 2, n = 10)
+z
 \dontshow{\}) # examplesIf}
 }

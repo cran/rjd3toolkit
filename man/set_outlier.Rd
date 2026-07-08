@@ -94,7 +94,7 @@ allocated to a pre-defined component after the decomposition: "AO" and "TC"
 to the irregular, "LS" to the trend and "SO" to seasonal component.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 
 # Customize a default specification
 init_spec <- tramoseats_spec_default
@@ -102,7 +102,7 @@ new_spec <- set_outlier(
     x = init_spec,
     span.type = "From",
     d0 = "2012-01-01",
-    outliers.type = c("LS", "AO"),
+    outliers.type = c("TC", "AO"),
     critical.value = 5,
     tc.rate = 0.85
 )
@@ -110,7 +110,7 @@ new_spec <- set_outlier(
 }
 \references{
 More information on outliers and other auxiliary variables in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/}
+\url{https://doc.jdemetra.org/a-outlier-detection}
 }
 \seealso{
 \code{\link{add_outlier}}, \code{\link{add_usrdefvar}}

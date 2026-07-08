@@ -23,7 +23,7 @@ returns an object of class \code{c("JD3_EASTERDAY","JD3_HOLIDAY")}
 Allows to define a holiday which date is related to Easter Sunday.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 easter_day(1) # Easter Monday
 easter_day(-2) # Easter Good Friday
 # Corpus Christi 60 days after Easter
@@ -36,7 +36,7 @@ easter_day(
 }
 \references{
 More information on calendar correction in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/a-calendar-correction}
+\url{https://doc.jdemetra.org/a-calendar-correction}
 }
 \seealso{
 \code{\link{national_calendar}}, \code{\link{fixed_day}},\code{\link{special_day}},\code{\link{fixed_week_day}}

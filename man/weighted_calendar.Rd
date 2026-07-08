@@ -30,7 +30,7 @@ Saxony-Anhalt, while from 1994 Day of Repentance and Prayer is celebrated
 only in Saxony.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 Belgium <- national_calendar(list(special_day("NEWYEAR"), fixed_day(7, 21)))
 France <- national_calendar(list(special_day("NEWYEAR"), fixed_day(7, 14)))
 composite_calendar <- weighted_calendar(list(France, Belgium), weights = c(1, 2))
@@ -38,7 +38,7 @@ composite_calendar <- weighted_calendar(list(France, Belgium), weights = c(1, 2)
 }
 \references{
 More information on calendar correction in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/a-calendar-correction}
+\url{https://doc.jdemetra.org/a-calendar-correction}
 }
 \seealso{
 \code{\link{national_calendar}}, \code{\link{chained_calendar}}

@@ -32,7 +32,7 @@ with the value one only for one given type of period (ex Q1)
 The \code{periodic_contrasts()} function is based on periodic_dummies but adds -1 to the period preceding a 1.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 # periodic dummies for a quarterly series
 p <- periodic_dummies(4, c(2000, 1), 60)
 # periodic contrasts for a quarterly series

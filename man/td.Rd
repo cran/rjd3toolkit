@@ -51,7 +51,7 @@ to a given group. Contrasts are the differences between the number of days in
 a given group (1 to 6) and the number of days in the reference group (0).
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 
 # Monthly regressors for Trading Days: each type of day is different
 # contrasts to Sundays (6 series)
@@ -63,7 +63,7 @@ regs_wd <- td(4, c(2020, 1), 60, groups = c(1, 1, 1, 1, 1, 0, 0), contrasts = TR
 }
 \references{
 More information on calendar correction in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/a-calendar-correction}
+\url{https://doc.jdemetra.org/a-calendar-correction}
 }
 \seealso{
 \code{\link{calendar_td}}

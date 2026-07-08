@@ -21,7 +21,7 @@ The regressors can be created with functions available in the package
 or come from any other source, provided they are \code{ts} class objects.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 
 # Creating one or several external regressors (TS objects), which will
 # be gathered in one or several groups
@@ -41,7 +41,7 @@ my_context <- modelling_context(variables = vars)
 }
 \references{
 More information on auxiliary variables in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/}
+\url{https://doc.jdemetra.org/a-outlier-detection}
 }
 \seealso{
 \code{\link{add_usrdefvar}}, \code{\link{intervention_variable}}

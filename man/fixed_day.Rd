@@ -23,7 +23,7 @@ weight and period of validity, like Christmas which is always celebrated on
 December 25th.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 day <- fixed_day(7, 21, .9)
 day # July 21st, with weight=0.9, on the whole sample
 day <- fixed_day(12, 25, .5, validity = list(start = "2010-01-01"))
@@ -34,7 +34,7 @@ day # December 25th, with weight=0.9, from February 1968 until January 2010
 }
 \references{
 More information on calendar correction in JDemetra+ online documentation:
-\url{https://jdemetra-new-documentation.netlify.app/a-calendar-correction}
+\url{https://doc.jdemetra.org/a-calendar-correction}
 }
 \seealso{
 \code{\link{national_calendar}}, \code{\link{special_day}},\code{\link{easter_day}}

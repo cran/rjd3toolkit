@@ -25,7 +25,7 @@ Periodogram Seasonality Test
 Tests on the sum of a periodogram at seasonal frequencies.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 s <- do_stationary(log(ABS$X0.2.09.10.M))$ddata
 seasonality_periodogram(s)
 seasonality_periodogram(random_t(2, 1000), 7)

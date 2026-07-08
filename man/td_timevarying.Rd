@@ -22,7 +22,7 @@ A Chi2 test
 Likelihood ratio test on time varying trading days
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 s <- log(ABS$X0.2.20.10.M)
 td_timevarying(s)
 \dontshow{\}) # examplesIf}

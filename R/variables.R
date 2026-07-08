@@ -17,7 +17,7 @@ NULL
 #' @references
 #' More information on calendar correction in JDemetra+ online documentation:
 #' \url{https://jdemetra-new-documentation.netlify.app/a-calendar-correction}
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' # Monthly regressor, five-year long, duration 8 days, effect finishing on Easter Monday
 #' ee <- easter_variable(12, c(2020, 1), length = 5 * 12, duration = 8, endpos = 1)
 #' je <- julianeaster_variable(12, c(2020, 1), length = 5 * 12, duration = 8)
@@ -66,7 +66,7 @@ julianeaster_variable <- function(frequency, start, length, s, duration = 6) {
 #'
 #' @export
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' # Leap years occur in year 2000, 2004, 2008 and 2012
 #' lp_variable(4, start = c(2000, 1), length = 4 * 13)
 #' lper <- lp_variable(12, c(2000, 1), length = 10 * 12, type = "LengthOfPeriod")
@@ -114,7 +114,7 @@ lp_variable <- function(frequency, start, length, s, type = c("LeapYear", "Lengt
 #'
 #' @export
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' # Outliers in February 2002
 #' ao <- ao_variable(12, c(2000, 1), length = 12 * 4, date = "2002-02-01")
 #' ls <- ls_variable(12, c(2000, 1), length = 12 * 4, date = "2002-02-01")
@@ -215,7 +215,7 @@ so_variable <- function(frequency, start, length, s, pos, date = NULL, zeroended
 #'
 #' @returns a \code{ts} object
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' # Ramp variable from January 2001 to September 2001
 #' rp <- ramp_variable(12, c(2000, 1), length = 12 * 4, range = c(13, 21))
 #' # Or equivalently
@@ -271,7 +271,7 @@ ramp_variable <- function(frequency, start, length, s, range) {
 #'
 #' @returns a \code{ts} object
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' iv1 <- intervention_variable(
 #'     frequency = 12,
 #'     start = c(2000, 1),
@@ -307,7 +307,7 @@ ramp_variable <- function(frequency, start, length, s, range) {
 #' @seealso \code{\link{modelling_context}}, \code{\link{add_usrdefvar}}
 #' @references
 #' More information on auxiliary variables in JDemetra+ online documentation:
-#' \url{https://jdemetra-new-documentation.netlify.app/}
+#' \url{https://jdemetra-new-documentation.netlify.app/a-outlier-detection}
 
 #' @export
 intervention_variable <- function(frequency, start, length, s, starts, ends, delta = 0, seasonaldelta = 0) {
@@ -350,7 +350,7 @@ intervention_variable <- function(frequency, start, length, s, starts, ends, del
 #'
 #' @returns a \code{mts} object with \code{frequency} column
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' # periodic dummies for a quarterly series
 #' p <- periodic_dummies(4, c(2000, 1), 60)
 #' # periodic contrasts for a quarterly series
@@ -435,7 +435,7 @@ periodic_contrasts <- function(frequency, start, length, s) {
 #'
 #' @export
 #'
-#' @examplesIf get_java_version() >= minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' trigonometric_variables(
 #'     frequency = 12,
 #'     length = 60,

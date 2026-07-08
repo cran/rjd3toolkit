@@ -28,7 +28,7 @@ Remark: the length of the series has some impact on the p-values, mainly on
 short series. Not critical.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 s <- do_stationary(log(ABS$X0.2.09.10.M))$ddata
 seasonality_modified_qs(s)
 \dontshow{\}) # examplesIf}

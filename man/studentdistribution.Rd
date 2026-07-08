@@ -5,7 +5,7 @@
 \alias{cdf_t}
 \alias{studentdistribution}
 \alias{random_t}
-\title{Student Distribution}
+\title{Student (T) Distribution}
 \usage{
 density_t(df, x)
 
@@ -21,19 +21,19 @@ random_t(df, n)
 \item{n}{number of observations.}
 }
 \value{
-The functions density_XXX and cdf_t return numeric vectors of same length as \code{x}.
-The functions random_XXX return random number (numeric vectors) of length \code{n}.
+Functions density_XXX and cdf_XXX return numeric vectors of same length as \code{x}.
+Function random_XXX returns a numeric vector of length \code{n}
 }
 \description{
 Probability Density Function (PDF), Cumulative Density Function (CDF) and generation of random variables following a Student distribution.
 }
 \examples{
-\dontshow{if (get_java_version() >= minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 # Probability density function of T with 2 degrees of freedom.
 z <- density_t(df = 2, .01 * seq(-100, 100, 1))
 # Generating a random vector with each component drawn from a T(2) distribution
 z <- random_t(2, 100)
-# Computing the probabilty that the random variable X following a T distribution
+# Computing the probability that the random variable X following a T distribution
 # with df degrees of freedom is lower than x
 z <- cdf_t(df = 12, x = 1.2)
 z
