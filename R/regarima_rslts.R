@@ -16,7 +16,10 @@ NULL
 .p2r_regarima_description <- function(p) {
     return(list(
         log = p$log,
-        preadjustment = .enum_extract(modelling.LengthOfPeriod, p$preadjustment),
+        preadjustment = .enum_extract(
+            modelling.LengthOfPeriod,
+            p$preadjustment
+        ),
         arima = .p2r_spec_sarima(p$arima),
         variables = .p2r_variables(p$variables)
     ))

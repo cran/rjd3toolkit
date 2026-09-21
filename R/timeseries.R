@@ -24,28 +24,39 @@ NULL
 #' aggregate(s, nfreq = 1, conversion = "Sum", complete = FALSE)
 #' # Quarterly mean
 #' aggregate(s, nfreq = 4, conversion = "Average")
-aggregate <- function(s, nfreq = 1,
-                      conversion = c("Sum", "Average", "First", "Last", "Min", "Max"),
-                      complete = TRUE) {
+aggregate <- function(
+    s,
+    nfreq = 1,
+    conversion = c("Sum", "Average", "First", "Last", "Min", "Max"),
+    complete = TRUE
+) {
     UseMethod("aggregate", s)
 }
 
+#' @importFrom rJava .jcall
+#' @importFrom rJava is.jnull
 #' @export
-aggregate.default <- function(s, nfreq = 1,
-                              conversion = c("Sum", "Average", "First", "Last", "Min", "Max"),
-                              complete = TRUE) {
+aggregate.default <- function(
+    s,
+    nfreq = 1,
+    conversion = c("Sum", "Average", "First", "Last", "Min", "Max"),
+    complete = TRUE
+) {
     conversion <- match.arg(conversion)
     if (is.null(s)) {
         return(NULL)
     }
     jd_s <- .r2jd_tsdata(s)
-    jd_agg <- .jcall(
+    jd_agg <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/timeseries/TsUtility",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/TsData;",
         method = "aggregate",
-        jd_s, as.integer(nfreq), conversion, complete
+        jd_s,
+        as.integer(nfreq),
+        conversion,
+        complete
     )
-    if (is.jnull(jd_agg)) {
+    if (rJava::is.jnull(jd_agg)) {
         return(NULL)
     } else {
         return(.jd2r_tsdata(jd_agg))
@@ -53,22 +64,42 @@ aggregate.default <- function(s, nfreq = 1,
 }
 
 #' @export
-aggregate.matrix <- function(s, nfreq = 1,
-                             conversion = c("Sum", "Average", "First", "Last", "Min", "Max"),
-                             complete = TRUE) {
-    res <- do.call(cbind, lapply(seq_len(ncol(s)), function(i) {
-        aggregate(s[, i], nfreq = nfreq, conversion = conversion, complete = complete)
-    }))
+aggregate.matrix <- function(
+    s,
+    nfreq = 1,
+    conversion = c("Sum", "Average", "First", "Last", "Min", "Max"),
+    complete = TRUE
+) {
+    res <- do.call(
+        cbind,
+        lapply(seq_len(ncol(s)), function(i) {
+            aggregate(
+                s[, i],
+                nfreq = nfreq,
+                conversion = conversion,
+                complete = complete
+            )
+        })
+    )
     colnames(res) <- colnames(s)
     res
 }
 
 #' @export
-aggregate.data.frame <- function(s, nfreq = 1,
-                                 conversion = c("Sum", "Average", "First", "Last", "Min", "Max"),
-                                 complete = TRUE) {
+#' @importFrom stats window
+aggregate.data.frame <- function(
+    s,
+    nfreq = 1,
+    conversion = c("Sum", "Average", "First", "Last", "Min", "Max"),
+    complete = TRUE
+) {
     res <- base::list2DF(lapply(seq_len(ncol(s)), function(i) {
-        aggregate(s[, i], nfreq = nfreq, conversion = conversion, complete = complete)
+        aggregate(
+            s[, i],
+            nfreq = nfreq,
+            conversion = conversion,
+            complete = complete
+        )
     }))
     colnames(res) <- colnames(s)
     res
@@ -79,10 +110,13 @@ aggregate.data.frame <- function(s, nfreq = 1,
 #' @param s Original series
 #'
 #' @returns Cleaned series
+#'
+#' @importFrom rJava is.jnull
+#' @importFrom rJava .jcall
 #' @export
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
-#' y <- window(ABS$X0.2.09.10.M, start = 1982, end = 2018, extend = TRUE)
+#' y <- stats::window(ABS$X0.2.09.10.M, start = 1982, end = 2018, extend = TRUE)
 #' y
 #' clean_extremities(y)
 clean_extremities <- function(s) {
@@ -90,14 +124,14 @@ clean_extremities <- function(s) {
         return(NULL)
     }
     jd_s <- .r2jd_tsdata(s)
-    jd_scleaned <- .jcall(
+    jd_scleaned <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/timeseries/TsUtility",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/TsData;",
         method = "cleanExtremities",
         jd_s
     )
 
-    if (is.jnull(jd_scleaned)) {
+    if (rJava::is.jnull(jd_scleaned)) {
         return(NULL)
     } else {
         return(.jd2r_tsdata(jd_scleaned))
@@ -124,6 +158,7 @@ ts_interpolate <- function(s, method = c("airline", "average")) {
     UseMethod("ts_interpolate", s)
 }
 
+#' @importFrom rJava .jcall
 #' @export
 ts_interpolate.default <- function(s, method = c("airline", "average")) {
     method <- match.arg(method)
@@ -132,7 +167,7 @@ ts_interpolate.default <- function(s, method = c("airline", "average")) {
     }
     jd_s <- .r2jd_tsdata(s)
     if (method == "airline") {
-        jd_si <- .jcall(
+        jd_si <- rJava::.jcall(
             obj = "jdplus/toolkit/base/r/modelling/Interpolation",
             returnSig = "Ljdplus/toolkit/base/api/timeseries/TsData;",
             method = "airlineInterpolation",
@@ -140,7 +175,7 @@ ts_interpolate.default <- function(s, method = c("airline", "average")) {
         )
         return(.jd2r_tsdata(jd_si))
     } else if (method == "average") {
-        jd_si <- .jcall(
+        jd_si <- rJava::.jcall(
             obj = "jdplus/toolkit/base/r/modelling/Interpolation",
             returnSig = "Ljdplus/toolkit/base/api/timeseries/TsData;",
             method = "averageInterpolation",
@@ -186,24 +221,36 @@ ts_interpolate.data.frame <- function(s, method = c("airline", "average")) {
 #' ts_adjust(y)
 #' # with reverse we can find the
 #' all.equal(ts_adjust(ts_adjust(y), reverse = TRUE), y)
-ts_adjust <- function(s, method = c("LeapYear", "LengthOfPeriod"), reverse = FALSE) {
+ts_adjust <- function(
+    s,
+    method = c("LeapYear", "LengthOfPeriod"),
+    reverse = FALSE
+) {
     UseMethod("ts_adjust", s)
 }
 
+#' @importFrom rJava .jcall
+#' @importFrom rJava is.jnull
 #' @export
-ts_adjust.default <- function(s, method = c("LeapYear", "LengthOfPeriod"), reverse = FALSE) {
+ts_adjust.default <- function(
+    s,
+    method = c("LeapYear", "LengthOfPeriod"),
+    reverse = FALSE
+) {
     method <- match.arg(method)
     if (is.null(s)) {
         return(NULL)
     }
     jd_s <- .r2jd_tsdata(s)
-    jd_st <- .jcall(
+    jd_st <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/modelling/Transformation",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/TsData;",
         method = "adjust",
-        jd_s, method, as.logical(reverse)
+        jd_s,
+        method,
+        as.logical(reverse)
     )
-    if (is.jnull(jd_st)) {
+    if (rJava::is.jnull(jd_st)) {
         return(NULL)
     } else {
         return(.jd2r_tsdata(jd_st))
@@ -211,7 +258,11 @@ ts_adjust.default <- function(s, method = c("LeapYear", "LengthOfPeriod"), rever
 }
 
 #' @export
-ts_adjust.matrix <- function(s, method = c("LeapYear", "LengthOfPeriod"), reverse = FALSE) {
+ts_adjust.matrix <- function(
+    s,
+    method = c("LeapYear", "LengthOfPeriod"),
+    reverse = FALSE
+) {
     result <- s
     for (i in seq_len(ncol(s))) {
         result[, i] <- ts_adjust(s[, i], method = method, reverse = reverse)
@@ -220,7 +271,11 @@ ts_adjust.matrix <- function(s, method = c("LeapYear", "LengthOfPeriod"), revers
 }
 
 #' @export
-ts_adjust.data.frame <- function(s, method = c("LeapYear", "LengthOfPeriod"), reverse = FALSE) {
+ts_adjust.data.frame <- function(
+    s,
+    method = c("LeapYear", "LengthOfPeriod"),
+    reverse = FALSE
+) {
     result <- s
     for (i in seq_len(ncol(s))) {
         result[, i] <- ts_adjust(s[, i], method = method, reverse = reverse)
@@ -237,13 +292,22 @@ ts_adjust.data.frame <- function(s, method = c("LeapYear", "LengthOfPeriod"), re
 #' @export
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
-#'
 #' daysOf(Retail$BookStores)
 #'
+#' @importFrom rJava .jcall
+#'
+#' @importFrom stats frequency
+#' @importFrom stats start
 daysOf <- function(ts, pos = 1) {
-    start <- start(ts)
-    jdom <- .r2jd_tsdomain(frequency(ts), start[1], start[2], length(ts))
-    days <- .jcall("jdplus/toolkit/base/r/timeseries/TsUtility", "[S", "daysOf", jdom, as.integer(pos - 1))
+    start <- stats::start(ts)
+    jdom <- .r2jd_tsdomain(stats::frequency(ts), start[1], start[2], length(ts))
+    days <- rJava::.jcall(
+        "jdplus/toolkit/base/r/timeseries/TsUtility",
+        "[S",
+        "daysOf",
+        jdom,
+        as.integer(pos - 1)
+    )
     return(as.Date(days))
 }
 
@@ -262,6 +326,9 @@ daysOf <- function(ts, pos = 1) {
 #' the data and the metadata
 #' @export
 #'
+#' @importFrom rJava .jcall
+#' @importFrom RProtoBuf read
+#'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' source <- "Txt"
 #' # id is split due to length restrictions
@@ -271,19 +338,21 @@ daysOf <- function(ts, pos = 1) {
 #'
 #' to_ts(source, id)
 to_ts <- function(source, id, type = "All") {
-    jmoniker <- .jcall(
+    jmoniker <- rJava::.jcall(
         obj = "jdplus/toolkit/base/api/timeseries/TsMoniker",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/TsMoniker;",
         method = "of",
-        source, id
+        source,
+        id
     )
-    jts <- .jcall(
+    jts <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/timeseries/TsUtility",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/Ts;",
         method = "makeTs",
-        jmoniker, type
+        jmoniker,
+        type
     )
-    bytes <- .jcall(
+    bytes <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/timeseries/TsUtility",
         returnSig = "[B",
         method = "toBuffer",
@@ -304,28 +373,44 @@ to_ts <- function(source, id, type = "All") {
 #' the metadata and all the series (data).
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
-#' # id is split due to length restrictions
-#' id1 <- "demetra://tsprovider/Txt/20111201/SERIES?datePattern=dd%2FMM%2Fyyyy&delimiter=SEMICOLON&"
-#' id2 <- "file=C%3A%5CDocuments%5CIPI%5CData%5CIPI_nace4.csv#seriesIndex=0"
-#' id <- paste0(id1, id2)
+#' path_data <- system.file("extdata", "IPI_nace4.csv",
+#'                          package = "rjd3workspace")
+#' id <- paste(
+#'     "demetra://tsprovider/Txt/20111201?datePattern=dd%2FMM%2Fyyyy",
+#'     "delimiter=SEMICOLON",
+#'     paste0(
+#'         "file=",
+#'         path_data |>
+#'             normalizePath() |>
+#'             URLencode(reserved = TRUE)
+#'     ),
+#'     sep = "&"
+#' )
 #' source <- "Txt"
-#' my_collection <- to_tscollection(source, id)
+#' if (nzchar(path_data)) {
+#'     my_collection <- to_tscollection(source, id)
+#' }
+#'
+#' @importFrom rJava .jcast
+#' @importFrom rJava .jcall
+#' @importFrom RProtoBuf read
 #' @export
 to_tscollection <- function(source, id, type = "All") {
-    jmoniker <- .jcall(
+    jmoniker <- rJava::.jcall(
         obj = "jdplus/toolkit/base/api/timeseries/TsMoniker",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/TsMoniker;",
         method = "of",
-        source, id
+        source,
+        id
     )
-    jtscoll <- .jcall(
+    jtscoll <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/timeseries/TsUtility",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/TsCollection;",
         method = "makeTsCollection",
-        .jcast(jmoniker, "jdplus/toolkit/base/api/timeseries/TsMoniker"),
+        rJava::.jcast(jmoniker, "jdplus/toolkit/base/api/timeseries/TsMoniker"),
         type
     )
-    bytes <- .jcall(
+    bytes <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/timeseries/TsUtility",
         returnSig = "[B",
         method = "toBuffer",
@@ -340,21 +425,26 @@ to_tscollection <- function(source, id, type = "All") {
 #' @param s R time series (class TS)
 #' @param name name of the series
 #'
-#' @returns
-#' Returns a java object of class JD3_TS
+#' @returns a Java object of class JD3_TS
+#'
 #' @export
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' s <- ABS$X0.2.09.10.M
 #' t <- data_to_ts(s, "test")
+#'
+#' @importFrom rJava .jcall
+#' @importFrom RProtoBuf read
+#'
 data_to_ts <- function(s, name) {
-    jts <- .jcall(
+    jts <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/timeseries/TsUtility",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/Ts;",
         method = "makeTs",
-        .r2jd_tsdata(s), name
+        .r2jd_tsdata(s),
+        name
     )
-    bytes <- .jcall(
+    bytes <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/timeseries/TsUtility",
         returnSig = "[B",
         method = "toBuffer",
@@ -365,49 +455,57 @@ data_to_ts <- function(s, name) {
 }
 
 #' @export
+#' @importFrom rJava .jcall
 #' @rdname jd3_utilities
 .r2jd_tmp_ts <- function(s, name) {
-    jts <- .jcall(
+    jts <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/timeseries/TsUtility",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/Ts;",
         method = "makeTs",
-        .r2jd_tsdata(s), name
+        .r2jd_tsdata(s),
+        name
     )
     return(jts)
 }
 
+#' @importFrom rJava .jcall
 #' @export
 #' @rdname jd3_utilities
 .r2jd_make_ts <- function(source, id, type = "All") {
-    jmoniker <- .jcall(
+    jmoniker <- rJava::.jcall(
         obj = "jdplus/toolkit/base/api/timeseries/TsMoniker",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/TsMoniker;",
         method = "of",
-        source, id
+        source,
+        id
     )
-    jts <- .jcall(
+    jts <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/timeseries/TsUtility",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/Ts;",
         method = "makeTs",
-        jmoniker, type
+        jmoniker,
+        type
     )
     return(jts)
 }
 
+#' @importFrom rJava .jcall
 #' @export
 #' @rdname jd3_utilities
 .r2jd_make_tscollection <- function(source, id, type = "All") {
-    jmoniker <- .jcall(
+    jmoniker <- rJava::.jcall(
         obj = "jdplus/toolkit/base/api/timeseries/TsMoniker",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/TsMoniker;",
         method = "of",
-        source, id
+        source,
+        id
     )
-    jtscoll <- .jcall(
+    jtscoll <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/timeseries/TsUtility",
         returnSig = "Ljdplus/toolkit/base/api/timeseries/Ts;",
         method = "makeTsCollection",
-        jmoniker, type
+        jmoniker,
+        type
     )
     return(jtscoll)
 }
@@ -429,10 +527,15 @@ data_to_ts <- function(s, name) {
 #' # Quarterly series
 #' t <- tsdata_of(c(1, 2, 3, NA, 4), c("1990-01-01", "1995-01-01", "1996-01-01",
 #'         "2000-08-01", "2000-11-01"))
+#'
+#' @importFrom rJava .jcall
 tsdata_of <- function(values, dates) {
-    jtsdata <- .jcall(
-        "jdplus/toolkit/base/r/timeseries/TsDataCollector", "Ljdplus/toolkit/base/api/timeseries/TsData;",
-        "of", as.numeric(values), as.character(dates)
+    jtsdata <- rJava::.jcall(
+        "jdplus/toolkit/base/r/timeseries/TsDataCollector",
+        "Ljdplus/toolkit/base/api/timeseries/TsData;",
+        "of",
+        as.numeric(values),
+        as.character(dates)
     )
 
     return(.jd2r_tsdata(jtsdata))
@@ -454,10 +557,19 @@ tsdata_of <- function(values, dates) {
 #' # two raw series for example's sake
 #' s2 <- rjd3toolkit::ABS$X0.2.08.10.M
 #' compare_annual_totals(s1,s2)
+#'
 #' @export
+#'
+#' @importFrom rJava .jcall
+#'
 compare_annual_totals <- function(raw, sa) {
     jsa <- .r2jd_tsdata(sa)
     jraw <- .r2jd_tsdata(raw)
-    return(.jcall("jdplus/sa/base/r/SaUtility", "D", "compareAnnualTotals", jraw, jsa))
+    return(rJava::.jcall(
+        "jdplus/sa/base/r/SaUtility",
+        "D",
+        "compareAnnualTotals",
+        jraw,
+        jsa
+    ))
 }
-

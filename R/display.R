@@ -1,7 +1,3 @@
-#' @importFrom stats pt
-NULL
-
-
 #' @title JD3 print functions
 #'
 #' @param x the object to print.
@@ -22,9 +18,15 @@ print.JD3_ARIMA <- function(x, ...) {
     m <- x
     if (m$var > 0 || length(m$delta) > 1) {
         cat(m$name, "\n\n")
-        if (length(m$ar) > 1) cat("AR:", m$ar, "\n")
-        if (length(m$delta) > 1) cat("DIF:", m$delta, "\n")
-        if (length(m$ma) > 1) cat("MA:", m$ma, "\n")
+        if (length(m$ar) > 1) {
+            cat("AR:", m$ar, "\n")
+        }
+        if (length(m$delta) > 1) {
+            cat("DIF:", m$delta, "\n")
+        }
+        if (length(m$ma) > 1) {
+            cat("MA:", m$ma, "\n")
+        }
         cat("var: ", m$var, "\n\n")
     }
     return(invisible(x))
@@ -49,18 +51,35 @@ print.JD3_UCARIMA <- function(x, ...) {
 #' @export
 print.JD3_SARIMA <- function(x, ...) {
     m <- x
-    cat("SARIMA model: ", .arima_node(length(m$phi), m$d, length(m$theta)),
-        .arima_node(length(m$bphi), m$bd, length(m$btheta)), m$period, "\n")
-    if (length(m$phi) > 0) cat("phi:", m$phi, "\n")
-    if (length(m$theta) > 0) cat("theta:", m$theta, "\n")
-    if (length(m$bphi) > 0) cat("bphi:", m$bphi, "\n")
-    if (length(m$btheta) > 0) cat("btheta:", m$btheta, "\n")
+    cat(
+        "SARIMA model: ",
+        .arima_node(length(m$phi), m$d, length(m$theta)),
+        .arima_node(length(m$bphi), m$bd, length(m$btheta)),
+        m$period,
+        "\n"
+    )
+    if (length(m$phi) > 0) {
+        cat("phi:", m$phi, "\n")
+    }
+    if (length(m$theta) > 0) {
+        cat("theta:", m$theta, "\n")
+    }
+    if (length(m$bphi) > 0) {
+        cat("bphi:", m$bphi, "\n")
+    }
+    if (length(m$btheta) > 0) {
+        cat("btheta:", m$btheta, "\n")
+    }
 
     return(invisible(x))
 }
 #' @rdname jd3_print
 #' @export
-print.JD3_SARIMA_ESTIMATION <- function(x, digits = max(3L, getOption("digits") - 3L), ...) {
+print.JD3_SARIMA_ESTIMATION <- function(
+    x,
+    digits = max(3L, getOption("digits") - 3L),
+    ...
+) {
     tables <- .sarima_coef_table(x, ...)
     orders <- tables$sarima_orders
 
@@ -69,7 +88,8 @@ print.JD3_SARIMA_ESTIMATION <- function(x, digits = max(3L, getOption("digits") 
         .arima_node(orders$p, orders$d, orders$q),
         .arima_node(orders$bp, orders$bd, orders$bq)
     )
-    if (!is.null(orders$period)) { # when sarima_estimate() is used
+    if (!is.null(orders$period)) {
+        # when sarima_estimate() is used
         cat(sprintf(" [%i]", orders$period))
     }
 
@@ -93,12 +113,14 @@ summary.JD3_SARIMA_ESTIMATION <- function(object, ...) {
     return(tables)
 }
 
-#' @importFrom stats printCoefmat
 #' @export
-print.summary.JD3_SARIMA_ESTIMATION <- function(x,
-                                                digits = max(3L, getOption("digits") - 3L),
-                                                signif.stars = getOption("show.signif.stars"),
-                                                ...) {
+#' @importFrom stats printCoefmat
+print.summary.JD3_SARIMA_ESTIMATION <- function(
+    x,
+    digits = max(3L, getOption("digits") - 3L),
+    signif.stars = getOption("show.signif.stars"),
+    ...
+) {
     orders <- x$sarima_orders
 
     cat(
@@ -106,7 +128,8 @@ print.summary.JD3_SARIMA_ESTIMATION <- function(x,
         .arima_node(orders$p, orders$d, orders$q),
         .arima_node(orders$bp, orders$bd, orders$bq)
     )
-    if (!is.null(orders$period)) { # when sarima_estimate() is used
+    if (!is.null(orders$period)) {
+        # when sarima_estimate() is used
         cat(sprintf(" [%i]", orders$period))
     }
 
@@ -117,9 +140,12 @@ print.summary.JD3_SARIMA_ESTIMATION <- function(x,
     } else if (ncol(x$coef_table) == 2) {
         print(x$coef_table, ...)
     } else {
-        printCoefmat(x$coef_table[-2],
-            digits = digits, signif.stars = signif.stars,
-            na.print = "NA", ...
+        stats::printCoefmat(
+            x$coef_table[-2],
+            digits = digits,
+            signif.stars = signif.stars,
+            na.print = "NA",
+            ...
         )
     }
     return(invisible(x))
@@ -129,12 +155,29 @@ print.summary.JD3_SARIMA_ESTIMATION <- function(x,
     UseMethod(".sarima_coef_table", x)
 }
 
+#' @importFrom stats pt
 .sarima_coef_table.default <- function(x, cov = NULL, ndf = NULL, ...) {
     m <- x
-    if (!is.null(m$phi)) p <- dim(m$phi)[2] else p <- 0
-    if (!is.null(m$theta)) q <- dim(m$theta)[2] else q <- 0
-    if (!is.null(m$bphi)) bp <- dim(m$bphi)[2] else bp <- 0
-    if (!is.null(m$btheta)) bq <- dim(m$btheta)[2] else bq <- 0
+    if (!is.null(m$phi)) {
+        p <- dim(m$phi)[2]
+    } else {
+        p <- 0
+    }
+    if (!is.null(m$theta)) {
+        q <- dim(m$theta)[2]
+    } else {
+        q <- 0
+    }
+    if (!is.null(m$bphi)) {
+        bp <- dim(m$bphi)[2]
+    } else {
+        bp <- 0
+    }
+    if (!is.null(m$btheta)) {
+        bq <- dim(m$btheta)[2]
+    } else {
+        bq <- 0
+    }
     sarima_orders <- list(p = p, d = m$d, q = q, bp = bp, bd = m$bd, bq = bq)
     names <- NULL
     if (p > 0) {
@@ -160,13 +203,16 @@ print.summary.JD3_SARIMA_ESTIMATION <- function(x,
             stde <- sqrt(diag(cov))
             sel <- fr$type == "ESTIMATED"
             t <- fr$value[sel] / stde
-            pval <- 2 * pt(abs(t), ndf, lower.tail = FALSE)
+            pval <- 2 * stats::pt(abs(t), ndf, lower.tail = FALSE)
             fr$stde[sel] <- stde
             fr$t[sel] <- t
             fr$pvalue[sel] <- pval
             colnames(fr) <- c(
-                "Estimate", "Type", "Std. Error",
-                "T-stat", "Pr(>|t|)"
+                "Estimate",
+                "Type",
+                "Std. Error",
+                "T-stat",
+                "Pr(>|t|)"
             )
         } else {
             colnames(fr) <- c("Estimate", "Type")
@@ -181,10 +227,16 @@ print.summary.JD3_SARIMA_ESTIMATION <- function(x,
     return(output)
 }
 
-.sarima_coef_table.JD3_REGARIMA_RSLTS <- function(x, cov = NULL, ndf = NULL, ...) {
+.sarima_coef_table.JD3_REGARIMA_RSLTS <- function(
+    x,
+    cov = NULL,
+    ndf = NULL,
+    ...
+) {
     .sarima_coef_table(x$description$arima, cov = cov, ndf = ndf, ...)
 }
 
+#' @importFrom stats pt
 .sarima_coef_table.JD3_SARIMA_ESTIMATE <- function(x, ...) {
     ndf <- x$likelihood$neffectiveobs - x$likelihood$nparams
     sarima_orders <- list(
@@ -201,12 +253,21 @@ print.summary.JD3_SARIMA_ESTIMATION <- function(x,
     if (length(estimate) > 0) {
         stde <- sqrt(diag(x$parameters$cov))
         t <- estimate / stde
-        pval <- 2 * pt(abs(t), ndf, lower.tail = FALSE)
-        table <- data.frame(estimate, "ESTIMATED", stde, t, pval,
-                            stringsAsFactors = FALSE)
+        pval <- 2 * stats::pt(abs(t), ndf, lower.tail = FALSE)
+        table <- data.frame(
+            estimate,
+            "ESTIMATED",
+            stde,
+            t,
+            pval,
+            stringsAsFactors = FALSE
+        )
         colnames(table) <- c(
-            "Estimate", "Type", "Std. Error",
-            "T-stat", "Pr(>|t|)"
+            "Estimate",
+            "Type",
+            "Std. Error",
+            "T-stat",
+            "Pr(>|t|)"
         )
     } else {
         table <- NULL
@@ -230,14 +291,22 @@ print.JD3_SPAN <- function(x, ...) {
     n0 <- span$n0
     n1 <- span$n1
 
-    x <- switch(type,
+    x <- switch(
+        type,
         ALL = "All",
         FROM = paste("From", d0, sep = " "),
         TO = paste("Until", d1, sep = " "),
         BETWEEN = paste(d0, d1, sep = " - "),
         FIRST = paste("First", n0, "periods", sep = " "),
         LAST = paste("Last", n1, "periods", sep = " "),
-        EXCLUDING = paste("All but first", n0, "periods and last", n1, "periods", sep = " "),
+        EXCLUDING = paste(
+            "All but first",
+            n0,
+            "periods and last",
+            n1,
+            "periods",
+            sep = " "
+        ),
         "Undefined"
     )
     cat(x, "\n")
@@ -248,14 +317,24 @@ print.JD3_SPAN <- function(x, ...) {
 
 #' @rdname jd3_print
 #' @export
-print.JD3_LIKELIHOOD <- function(x, summary_info = getOption("summary_info"), ...) {
+print.JD3_LIKELIHOOD <- function(
+    x,
+    summary_info = getOption("summary_info"),
+    ...
+) {
     ll <- x
     cat("Number of observations:", ll$nobs, "\n")
     cat("Number of effective observations:", ll$neffectiveobs, "\n")
     cat("Number of parameters:", ll$nparams, "\n\n")
     cat("Loglikelihood:", ll$ll, "\n")
-    if (ll$ll != ll$adjustedll) cat("Adjusted loglikelihood:", ll$adjustedll, "\n\n")
-    cat("Standard error of the regression (ML estimate):", sqrt(ll$ssq / ll$neffectiveobs), "\n")
+    if (ll$ll != ll$adjustedll) {
+        cat("Adjusted loglikelihood:", ll$adjustedll, "\n\n")
+    }
+    cat(
+        "Standard error of the regression (ML estimate):",
+        sqrt(ll$ssq / ll$neffectiveobs),
+        "\n"
+    )
     cat("AIC:", ll$aic, "\n")
     cat("AICC:", ll$aicc, "\n")
     cat("BIC:", ll$bic, "\n\n")
@@ -285,17 +364,31 @@ summary.JD3_LIKELIHOOD <- function(object, ...) {
 
 #' @export
 print.summary.JD3_LIKELIHOOD <- function(x, ...) {
-    cat("Number of observations: ", x$nobs,
-        ", Number of effective observations: ", x$neffectiveobs,
-        ", Number of parameters: ", x$nparams, "\n",
+    cat(
+        "Number of observations: ",
+        x$nobs,
+        ", Number of effective observations: ",
+        x$neffectiveobs,
+        ", Number of parameters: ",
+        x$nparams,
+        "\n",
         sep = ""
     )
     cat("Loglikelihood:", x$ll)
-    if (x$ll != x$adjustedll) cat(", Adjusted loglikelihood:", x$adjustedll)
+    if (x$ll != x$adjustedll) {
+        cat(", Adjusted loglikelihood:", x$adjustedll)
+    }
     cat("\nStandard error of the regression (ML estimate):", x$se, "\n")
-    cat("AIC: ", x$aic, ", ",
-        "AICc: ", x$aicc, ", ",
-        "BIC: ", x$bic, "\n",
+    cat(
+        "AIC: ",
+        x$aic,
+        ", ",
+        "AICc: ",
+        x$aicc,
+        ", ",
+        "BIC: ",
+        x$bic,
+        "\n",
         sep = ""
     )
     return(invisible(x))
@@ -303,19 +396,27 @@ print.summary.JD3_LIKELIHOOD <- function(x, ...) {
 
 #' @rdname jd3_print
 #' @export
-print.JD3_REGARIMA_RSLTS <- function(x, digits = max(3L, getOption("digits") - 3L),
-                                     summary_info = getOption("summary_info"), ...) {
-    cat("Log-transformation:", if (x$description$log) {
-        "yes"
-    } else {
-        "no"
-    },
-    "\n",
-    sep = " "
+print.JD3_REGARIMA_RSLTS <- function(
+    x,
+    digits = max(3L, getOption("digits") - 3L),
+    summary_info = getOption("summary_info"),
+    ...
+) {
+    cat(
+        "Log-transformation:",
+        if (x$description$log) {
+            "yes"
+        } else {
+            "no"
+        },
+        "\n",
+        sep = " "
     )
 
-    ndf <- x$estimation$likelihood$neffectiveobs - x$estimation$likelihood$nparams
-    print(x$description$arima,
+    ndf <- x$estimation$likelihood$neffectiveobs -
+        x$estimation$likelihood$nparams
+    print(
+        x$description$arima,
         cov = x$estimation$parameters$cov,
         ndf = ndf,
         digits = digits,
@@ -339,8 +440,12 @@ print.JD3_REGARIMA_RSLTS <- function(x, digits = max(3L, getOption("digits") - 3
 }
 
 #' @export
-print.JD3_SARIMA_ESTIMATE <- function(x, digits = max(3L, getOption("digits") - 3L),
-                                      summary_info = getOption("summary_info"), ...) {
+print.JD3_SARIMA_ESTIMATE <- function(
+    x,
+    digits = max(3L, getOption("digits") - 3L),
+    summary_info = getOption("summary_info"),
+    ...
+) {
     tables <- .sarima_coef_table(x, ...)
     orders <- tables$sarima_orders
 
@@ -349,7 +454,8 @@ print.JD3_SARIMA_ESTIMATE <- function(x, digits = max(3L, getOption("digits") - 
         .arima_node(orders$p, orders$d, orders$q),
         .arima_node(orders$bp, orders$bd, orders$bq)
     )
-    if (!is.null(orders$period)) { # when sarima_estimate() is used
+    if (!is.null(orders$period)) {
+        # when sarima_estimate() is used
         cat(sprintf(" [%i]", orders$period))
     }
 
@@ -383,24 +489,32 @@ print.JD3_SARIMA_ESTIMATE <- function(x, digits = max(3L, getOption("digits") - 
     UseMethod(".regarima_coef_table", x)
 }
 
+#' @importFrom stats pt
 .regarima_coef_table.default <- function(x, ...) {
     q <- x
     if (length(q$description$variables) > 0) {
-        regs <- do.call("rbind", lapply(q$description$variables, function(z) {
-            z$coef
-        }))
+        regs <- do.call(
+            "rbind",
+            lapply(q$description$variables, function(z) {
+                z$coef
+            })
+        )
         xregs <- cbind(regs, stde = NA, t = NA, pvalue = NA)
         stde <- sqrt(diag(q$estimation$bvar))
         sel <- xregs$type == "ESTIMATED"
         t <- xregs$value[sel] / stde
-        ndf <- q$estimation$likelihood$neffectiveobs - q$estimation$likelihood$nparams
-        pval <- 2 * pt(abs(t), ndf, lower.tail = FALSE)
+        ndf <- q$estimation$likelihood$neffectiveobs -
+            q$estimation$likelihood$nparams
+        pval <- 2 * stats::pt(abs(t), ndf, lower.tail = FALSE)
         xregs$stde[sel] <- stde
         xregs$t[sel] <- t
         xregs$pvalue[sel] <- pval
         colnames(xregs) <- c(
-            "Estimate", "Type", "Std. Error",
-            "T-stat", "Pr(>|t|)"
+            "Estimate",
+            "Type",
+            "Std. Error",
+            "T-stat",
+            "Pr(>|t|)"
         )
     } else {
         xregs <- NULL
@@ -408,6 +522,7 @@ print.JD3_SARIMA_ESTIMATE <- function(x, digits = max(3L, getOption("digits") - 
     return(xregs)
 }
 
+#' @importFrom stats pt
 .regarima_coef_table.JD3_SARIMA_ESTIMATE <- function(x, ...) {
     ndf <- x$likelihood$neffectiveobs - x$likelihood$nparams
 
@@ -415,12 +530,21 @@ print.JD3_SARIMA_ESTIMATE <- function(x, digits = max(3L, getOption("digits") - 
     if (length(estimate) > 0) {
         stde <- sqrt(diag(x$bvar))
         t <- estimate / stde
-        pval <- 2 * pt(abs(t), ndf, lower.tail = FALSE)
-        coef_table <- data.frame(estimate, "ESTIMATED", stde, t, pval,
-                            stringsAsFactors = FALSE)
+        pval <- 2 * stats::pt(abs(t), ndf, lower.tail = FALSE)
+        coef_table <- data.frame(
+            estimate,
+            "ESTIMATED",
+            stde,
+            t,
+            pval,
+            stringsAsFactors = FALSE
+        )
         colnames(coef_table) <- c(
-            "Estimate", "Type", "Std. Error",
-            "T-stat", "Pr(>|t|)"
+            "Estimate",
+            "Type",
+            "Std. Error",
+            "T-stat",
+            "Pr(>|t|)"
         )
     } else {
         coef_table <- NULL
@@ -431,10 +555,14 @@ print.JD3_SARIMA_ESTIMATE <- function(x, digits = max(3L, getOption("digits") - 
 #' @export
 summary.JD3_REGARIMA_RSLTS <- function(object, ...) {
     log <- object$description$log
-    ndf <- object$estimation$likelihood$neffectiveobs - object$estimation$likelihood$nparams + 1
-    sarima_sum <- summary(object$description$arima,
+    ndf <- object$estimation$likelihood$neffectiveobs -
+        object$estimation$likelihood$nparams +
+        1
+    sarima_sum <- summary(
+        object$description$arima,
         cov = object$estimation$parameters$cov,
-        ndf = ndf, ...
+        ndf = ndf,
+        ...
     )
     xregs <- .regarima_coef_table(object, ...)
     likelihood <- summary(object$estimation$likelihood)
@@ -464,47 +592,45 @@ summary.JD3_SARIMA_ESTIMATE <- function(object, ...) {
 }
 
 #' @export
-print.summary.JD3_REGARIMA_RSLTS <- function(x,
-                                             digits = max(3L, getOption("digits") - 3L),
-                                             signif.stars = getOption("show.signif.stars"),
-                                             ...) {
-    if (!is.null(x$method)) { # Used to add the method when regarima/tramo function is used
+#' @importFrom stats printCoefmat
+print.summary.JD3_REGARIMA_RSLTS <- function(
+    x,
+    digits = max(3L, getOption("digits") - 3L),
+    signif.stars = getOption("show.signif.stars"),
+    ...
+) {
+    if (!is.null(x$method)) {
+        # Used to add the method when regarima/tramo function is used
         cat("Method:", x$method, "\n")
     }
 
     if (!is.null(x$log)) {
-        cat("Log-transformation:", if (x$log) {
-            "yes"
-        } else {
-            "no"
-        }, "\n", sep = " ")
+        cat(
+            "Log-transformation:",
+            if (x$log) {
+                "yes"
+            } else {
+                "no"
+            },
+            "\n",
+            sep = " "
+        )
     }
 
     print(x$sarima, digits = digits, signif.stars = signif.stars, ...)
     cat("\n")
     if (!is.null(x$xregs)) {
         cat("Regression model:\n")
-        printCoefmat(x$xregs[-2],
-            digits = digits, signif.stars = signif.stars,
-            na.print = "NA", ...
+        stats::printCoefmat(
+            x$xregs[-2],
+            digits = digits,
+            signif.stars = signif.stars,
+            na.print = "NA",
+            ...
         )
     } else {
         cat("No regression variables\n")
     }
     print(x$likelihood, ...)
     return(invisible(x))
-}
-
-#' @export
-diagnostics.JD3_REGARIMA_RSLTS <- function(x, ...) {
-    if (is.null(x)) {
-        return(NULL)
-    }
-    residuals_test <- x$diagnostics
-    residuals_test <- data.frame(
-        Statistic = sapply(residuals_test, function(test) test[["value"]]),
-        P.value = sapply(residuals_test, function(test) test[["pvalue"]]),
-        Description = sapply(residuals_test, FUN = attr, which = "distribution")
-    )
-    return(residuals_test)
 }

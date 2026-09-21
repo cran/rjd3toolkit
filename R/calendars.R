@@ -1,6 +1,3 @@
-#' @import checkmate
-#' @importFrom methods is
-#' @importFrom stats frequency ts is.ts is.mts start end cycle
 #' @include protobuf.R jd2r.R
 NULL
 
@@ -39,14 +36,24 @@ SINGLEDAY <- "JD3_SINGLEDAY"
     if (pstart == DATE_MIN) {
         start <- NULL
     } else {
-        start <- as.Date(sprintf("%04i-%02i-%02i", pstart$year, pstart$month, pstart$day))
+        start <- as.Date(sprintf(
+            "%04i-%02i-%02i",
+            pstart$year,
+            pstart$month,
+            pstart$day
+        ))
     }
 
     pend <- vp$end
     if (pend == DATE_MAX) {
         end <- NULL
     } else {
-        end <- as.Date(sprintf("%04i-%02i-%02i", pend$year, pend$month, pend$day))
+        end <- as.Date(sprintf(
+            "%04i-%02i-%02i",
+            pend$year,
+            pend$month,
+            pend$day
+        ))
     }
     if (is.null(start) && is.null(end)) {
         return(NULL)
@@ -55,8 +62,9 @@ SINGLEDAY <- "JD3_SINGLEDAY"
     }
 }
 
+#' @importFrom stats is.mts
 .length_ts <- function(s) {
-    if (is.mts(s)) {
+    if (stats::is.mts(s)) {
         nrow(s)
     } else {
         length(s)
@@ -150,12 +158,33 @@ fixed_day <- function(month, day, weight = 1, validity = NULL) {
 #' More information on calendar correction in JDemetra+ online documentation:
 #' \url{https://doc.jdemetra.org/a-calendar-correction}
 #'
-fixed_week_day <- function(month, week, dayofweek, weight = 1, validity = NULL) {
-    return(structure(list(month = month, week = week, dayofweek = dayofweek, weight = weight, validity = validity), class = c(FIXEDWEEKDAY, HOLIDAY)))
+fixed_week_day <- function(
+    month,
+    week,
+    dayofweek,
+    weight = 1,
+    validity = NULL
+) {
+    return(structure(
+        list(
+            month = month,
+            week = week,
+            dayofweek = dayofweek,
+            weight = weight,
+            validity = validity
+        ),
+        class = c(FIXEDWEEKDAY, HOLIDAY)
+    ))
 }
 
 .p2r_fixedweekday <- function(p) {
-    return(fixed_week_day(p$month, week = p$position, dayofweek = p$weekday, weight = p$weight, validity = .p2r_validityPeriod(p$validity)))
+    return(fixed_week_day(
+        p$month,
+        week = p$position,
+        dayofweek = p$weekday,
+        weight = p$weight,
+        validity = .p2r_validityPeriod(p$validity)
+    ))
 }
 
 .r2p_fixedweekday <- function(r) {
@@ -199,11 +228,24 @@ fixed_week_day <- function(month, week, dayofweek, weight = 1, validity = NULL) 
 #'
 #' @export
 easter_day <- function(offset, julian = FALSE, weight = 1, validity = NULL) {
-    return(structure(list(offset = offset, julian = julian, weight = weight, validity = validity), class = c(EASTERDAY, HOLIDAY)))
+    return(structure(
+        list(
+            offset = offset,
+            julian = julian,
+            weight = weight,
+            validity = validity
+        ),
+        class = c(EASTERDAY, HOLIDAY)
+    ))
 }
 
 .p2r_easterday <- function(p) {
-    return(easter_day(p$offset, p$julian, p$weight, .p2r_validityPeriod(p$validity)))
+    return(easter_day(
+        p$offset,
+        p$julian,
+        p$weight,
+        .p2r_validityPeriod(p$validity)
+    ))
 }
 
 .r2p_easterday <- function(r) {
@@ -238,7 +280,10 @@ easter_day <- function(offset, julian = FALSE, weight = 1, validity = NULL) {
 #'
 #' @export
 single_day <- function(date, weight = 1) {
-    return(structure(list(date = date, weight = weight), class = c(SINGLEDAY, HOLIDAY)))
+    return(structure(
+        list(date = date, weight = weight),
+        class = c(SINGLEDAY, HOLIDAY)
+    ))
 }
 
 .p2r_singleday <- function(p) {
@@ -306,13 +351,23 @@ single_day <- function(date, weight = 1) {
 #' More information on calendar correction in JDemetra+ online documentation:
 #' \url{https://doc.jdemetra.org/a-calendar-correction}
 special_day <- function(event, offset = 0, weight = 1, validity = NULL) {
-    output <- list(event = event, offset = offset, weight = weight, validity = validity)
+    output <- list(
+        event = event,
+        offset = offset,
+        weight = weight,
+        validity = validity
+    )
     class(output) <- c(SPECIALDAY, HOLIDAY)
     return(output)
 }
 
 .p2r_specialday <- function(p) {
-    return(special_day(.enum_extract(jd3.CalendarEvent, p$event), p$offset, p$weight, .p2r_validityPeriod(p$validity)))
+    return(special_day(
+        .enum_extract(jd3.CalendarEvent, p$event),
+        p$offset,
+        p$weight,
+        .p2r_validityPeriod(p$validity)
+    ))
 }
 
 .r2p_specialday <- function(r) {
@@ -328,13 +383,16 @@ special_day <- function(event, offset = 0, weight = 1, validity = NULL) {
     return(pd)
 }
 
+#' @importFrom rJava .jcall
 #' @export
 #' @rdname jd3_utilities
 .p2jd_calendar <- function(pcalendar) {
     bytes <- pcalendar$serialize(NULL)
-    jcal <- .jcall(
-        "jdplus/toolkit/base/r/calendar/Calendars", "Ljdplus/toolkit/base/api/timeseries/calendars/Calendar;",
-        "calendarOf", bytes
+    jcal <- rJava::.jcall(
+        "jdplus/toolkit/base/r/calendar/Calendars",
+        "Ljdplus/toolkit/base/api/timeseries/calendars/Calendar;",
+        "calendarOf",
+        bytes
     )
     return(jcal)
 }
@@ -398,17 +456,33 @@ special_day <- function(event, offset = 0, weight = 1, validity = NULL) {
 #' # contrasts to week-end days (1 series)
 #' regs_wd <- td(4, c(2020, 1), 60, groups = c(1, 1, 1, 1, 1, 0, 0), contrasts = TRUE)
 #'
-td <- function(frequency, start, length, s, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = TRUE) {
-    if (!missing(s) && is.ts(s)) {
+#' @importFrom rJava .jcall
+#'
+#' @importFrom stats is.ts
+#' @importFrom stats frequency
+#' @importFrom stats start
+td <- function(
+    frequency,
+    start,
+    length,
+    s,
+    groups = c(1, 2, 3, 4, 5, 6, 0),
+    contrasts = TRUE
+) {
+    if (!missing(s) && stats::is.ts(s)) {
         frequency <- stats::frequency(s)
         start <- stats::start(s)
         length <- .length_ts(s)
     }
     jdom <- .r2jd_tsdomain(frequency, start[1], start[2], length)
     igroups <- as.integer(groups)
-    jm <- .jcall(
-        "jdplus/toolkit/base/r/modelling/Variables", "Ljdplus/toolkit/base/api/math/matrices/Matrix;",
-        "td", jdom, igroups, contrasts
+    jm <- rJava::.jcall(
+        "jdplus/toolkit/base/r/modelling/Variables",
+        "Ljdplus/toolkit/base/api/math/matrices/Matrix;",
+        "td",
+        jdom,
+        igroups,
+        contrasts
     )
     data <- .jd2r_matrix(jm)
     data <- .group_names(data, contrasts = contrasts)
@@ -451,6 +525,7 @@ td <- function(frequency, start, length, s, groups = c(1, 2, 3, 4, 5, 6, 0), con
 #' @references
 #' More information on calendar correction in JDemetra+ online documentation:
 #' \url{https://doc.jdemetra.org/a-calendar-correction}
+#'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' BE <- national_calendar(list(
 #'     fixed_day(7, 21),
@@ -466,29 +541,40 @@ td <- function(frequency, start, length, s, groups = c(1, 2, 3, 4, 5, 6, 0), con
 #' ))
 #' q <- holidays(BE, "2021-01-01", 366 * 10, type = "All")
 #' plot(apply(q, 1, max))
+#'
 #' @export
-holidays <- function(calendar,
-                     start,
-                     length,
-                     nonworking = c(6, 7),
-                     type = c("Skip", "All", "NextWorkingDay", "PreviousWorkingDay"),
-                     single = FALSE) {
+#'
+#' @importFrom rJava .jarray
+#' @importFrom rJava .jcall
+#'
+holidays <- function(
+    calendar,
+    start,
+    length,
+    nonworking = c(6, 7),
+    type = c("Skip", "All", "NextWorkingDay", "PreviousWorkingDay"),
+    single = FALSE
+) {
     type <- match.arg(type)
     pcal <- .r2p_calendar(calendar)
     jcal <- .p2jd_calendar(pcal)
-    jm <- .jcall(
+    jm <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/calendar/Calendars",
         returnSig = "Ljdplus/toolkit/base/api/math/matrices/Matrix;",
         method = "holidays",
         jcal,
         as.character(start),
         as.integer(length),
-        .jarray(as.integer(nonworking)),
+        rJava::.jarray(as.integer(nonworking)),
         type,
         as.logical(single)
     )
     res <- .jd2r_matrix(jm)
-    rownames(res) <- as.character(seq(as.Date(start), length.out = nrow(res), by = "days"))
+    rownames(res) <- as.character(seq(
+        as.Date(start),
+        length.out = nrow(res),
+        by = "days"
+    ))
     colnames(res) <- names(calendar$days)
     return(res)
 }
@@ -499,14 +585,18 @@ holidays <- function(calendar,
 #' Given a pre-defined calendar and set of groups, the function displays the long-term means which
 #' would be used to seasonally adjust the corresponding regressors, as the final value using
 #' contrasts is "number of days in the group - long term mean".
+#'
 #' @details
 #' A long-term mean is a probability based computation of the average value for every period in every group.
 #' (see references). For monthly regressors there are 12 types of periods (January to December).
+#'
 #' @inheritParams calendar_td
 #'
 #' @returns returns an object of class \code{c("matrix","array")} with the long term means corresponding
 #' to each group/period, starting with the 0-group.
+#'
 #' @export
+#'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' BE <- national_calendar(list(
 #'     fixed_day(7, 21),
@@ -524,12 +614,25 @@ holidays <- function(calendar,
 #'     groups = c(1, 1, 1, 1, 1, 0, 0),
 #'     holiday = 7
 #' )
-long_term_mean <- function(calendar, frequency, groups = c(1, 2, 3, 4, 5, 6, 0), holiday = 7) {
+#'
+#' @importFrom rJava .jcall
+#'
+long_term_mean <- function(
+    calendar,
+    frequency,
+    groups = c(1, 2, 3, 4, 5, 6, 0),
+    holiday = 7
+) {
     pcal <- .r2p_calendar(calendar)
     jcal <- .p2jd_calendar(pcal)
-    jm <- .jcall(
-        "jdplus/toolkit/base/r/calendar/Calendars", "Ljdplus/toolkit/base/api/math/matrices/Matrix;",
-        "longTermMean", jcal, as.integer(frequency), as.integer(groups), as.integer(holiday)
+    jm <- rJava::.jcall(
+        "jdplus/toolkit/base/r/calendar/Calendars",
+        "Ljdplus/toolkit/base/api/math/matrices/Matrix;",
+        "longTermMean",
+        jcal,
+        as.integer(frequency),
+        as.integer(groups),
+        as.integer(holiday)
     )
     res <- .jd2r_matrix(jm)
     return(.group_names(res, contrasts = FALSE))
@@ -539,14 +642,16 @@ long_term_mean <- function(calendar, frequency, groups = c(1, 2, 3, 4, 5, 6, 0),
 #'
 #' @description
 #' Allows to display the date of Easter Sunday for each year, in the defined period. Dates are
-#' displayed in "YYYY-MM-DD" format and as a number of days since January 1st 1970.
+#' displayed in `"YYYY-MM-DD"` format and as a number of days since January 1st 1970.
 #'
 #' @param year0,year1 starting year and ending year
 #' @inheritParams easter_day
 #'
 #' @export
-#' @returns a named numeric vector. Names are the dates in format "YYYY-MM-DD",
+#'
+#' @returns a named numeric vector. Names are the dates in format `"YYYY-MM-DD"`,
 #' values are number of days since January 1st 1970.
+#'
 #' @seealso \code{\link{national_calendar}}, \code{\link{easter_day}}
 #' @references
 #' More information on calendar correction in JDemetra+ online documentation:
@@ -555,8 +660,18 @@ long_term_mean <- function(calendar, frequency, groups = c(1, 2, 3, 4, 5, 6, 0),
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' # Dates from 2018(included) to 2023 (included)
 #' easter_dates(2018, 2023)
+#'
+#' @importFrom rJava .jcall
+#'
 easter_dates <- function(year0, year1, julian = FALSE) {
-    dates <- .jcall("jdplus/toolkit/base/r/calendar/Calendars", "[S", "easter", as.integer(year0), as.integer(year1), as.logical(julian))
+    dates <- rJava::.jcall(
+        "jdplus/toolkit/base/r/calendar/Calendars",
+        "[S",
+        "easter",
+        as.integer(year0),
+        as.integer(year1),
+        as.logical(julian)
+    )
     return(sapply(dates, as.Date))
 }
 
@@ -564,52 +679,86 @@ easter_dates <- function(year0, year1, julian = FALSE) {
 #'
 #' @description
 #' Allows to generate a specific regressor for correcting trading days effects in Stock series.
+#'
 #' @inheritParams td
 #' @param w indicates day of the month when inventories and other stocks are reported.
 #' (to denote the last day of the month enter 31).
+#'
 #' @details
 #' The regressor will have the value -1 if the w-th day is a Sunday, 1 if it is a Monday as 0 otherwise.
+#'
 #' @returns Time series (object of class \code{c("ts","mts","matrix")}).
+#'
 #' @seealso \code{\link{calendar_td}}
 #' @references
 #' More information on calendar correction in JDemetra+ online documentation:
 #' \url{https://doc.jdemetra.org/a-calendar-correction}
+#'
 #' @export
+#'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' stock_td(frequency = 12L, start = c(1990L, 1L), length = 480L, w = 1L)
 #'
-stock_td <- function(frequency, start, length, s, w = 31) {
-    if (!missing(s) && is.ts(s)) {
+#' @importFrom rJava .jcall
+#'
+#' @importFrom stats is.ts
+#' @importFrom stats frequency
+#' @importFrom stats start
+stock_td <- function(frequency, start, length, s = NULL, w = 31) {
+    if (!is.null(s) && stats::is.ts(s)) {
         frequency <- stats::frequency(s)
         start <- stats::start(s)
         length <- .length_ts(s)
     }
+
+    # Check start
+    checkmate::assert_integerish(start, min.len = 1L, max.len = 2L)
+    if (length(start) == 1L) {
+        start <- c(start, 1L)
+    }
+
+    # Check length
+    checkmate::assert_count(length)
+
+    # Check frequency
+    checkmate::assert_count(frequency, positive = TRUE)
+    checkmate::assert_choice(frequency, choices = c(1L, 2L, 3L, 4L, 6L, 12L))
+
     jdom <- .r2jd_tsdomain(frequency, start[1], start[2], length)
-    jm <- .jcall(
+    jm <- rJava::.jcall(
         obj = "jdplus/toolkit/base/r/modelling/Variables",
         returnSig = "Ljdplus/toolkit/base/api/math/matrices/Matrix;",
         method = "stockTradingDays",
-        jdom, as.integer(w)
+        jdom,
+        as.integer(w)
     )
     data <- .jd2r_matrix(jm)
-    colnames(data) <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+    colnames(data) <- c(
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    )
     return(ts(data, frequency = frequency, start = start))
 }
 
+#' @importFrom methods is
 .r2p_holiday <- function(r) {
-    if (is(r, SPECIALDAY)) {
+    if (methods::is(r, SPECIALDAY)) {
         return(.r2p_specialday(r))
     }
-    if (is(r, FIXEDDAY)) {
+    if (methods::is(r, FIXEDDAY)) {
         return(.r2p_fixedday(r))
     }
-    if (is(r, EASTERDAY)) {
+    if (methods::is(r, EASTERDAY)) {
         return(.r2p_easterday(r))
     }
-    if (is(r, FIXEDWEEKDAY)) {
+    if (methods::is(r, FIXEDWEEKDAY)) {
         return(.r2p_fixedweekday(r))
     }
-    if (is(r, SINGLEDAY)) {
+    if (methods::is(r, SINGLEDAY)) {
         return(.r2p_singleday(r))
     }
     return(NULL)
@@ -618,11 +767,13 @@ stock_td <- function(frequency, start, length, s, w = 31) {
 .p2r_calendar <- function(p) {
     return(structure(
         list(
-            days = c(lapply(p$fixed_days, FUN = .p2r_fixedday),
-                     lapply(p$fixed_week_days, FUN = .p2r_fixedweekday),
-                     lapply(p$easter_related_days, FUN = .p2r_easterday),
-                     lapply(p$prespecified_holidays, FUN = .p2r_specialday),
-                     lapply(p$single_dates, FUN = .p2r_singleday)),
+            days = c(
+                lapply(p$fixed_days, FUN = .p2r_fixedday),
+                lapply(p$fixed_week_days, FUN = .p2r_fixedweekday),
+                lapply(p$easter_related_days, FUN = .p2r_easterday),
+                lapply(p$prespecified_holidays, FUN = .p2r_specialday),
+                lapply(p$single_dates, FUN = .p2r_singleday)
+            ),
             mean_correction = p$mean_correction
         ),
         class = c("JD3_CALENDAR", "JD3_CALENDARDEFINITION")
@@ -679,11 +830,14 @@ stock_td <- function(frequency, start, length, s, w = 31) {
 #'
 #' @export
 chained_calendar <- function(calendar1, calendar2, break_date) {
-    return(structure(list(
-        calendar1 = calendar1,
-        calendar2 = calendar2,
-        break_date = break_date
-    ), class = c("JD3_CHAINEDCALENDAR", "JD3_CALENDARDEFINITION")))
+    return(structure(
+        list(
+            calendar1 = calendar1,
+            calendar2 = calendar2,
+            break_date = break_date
+        ),
+        class = c("JD3_CHAINEDCALENDAR", "JD3_CALENDARDEFINITION")
+    ))
 }
 
 .p2r_chainedcalendar <- function(p) {
@@ -726,6 +880,7 @@ chained_calendar <- function(calendar1, calendar2, break_date) {
 #' \url{https://doc.jdemetra.org/a-calendar-correction}
 #'
 #' @export
+#' @importFrom checkmate assert_numeric
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' Belgium <- national_calendar(list(special_day("NEWYEAR"), fixed_day(7, 21)))
@@ -733,11 +888,15 @@ chained_calendar <- function(calendar1, calendar2, break_date) {
 #' composite_calendar <- weighted_calendar(list(France, Belgium), weights = c(1, 2))
 #'
 weighted_calendar <- function(calendars, weights) {
-    # checkmate::assertNames(calendars)
-    checkmate::assertNumeric(weights)
-    if (length(calendars) != length(weights)) stop("Calendars and weights should have the same length")
+    checkmate::assert_numeric(weights)
+    if (length(calendars) != length(weights)) {
+        stop("Calendars and weights should have the same length")
+    }
 
-    return(structure(list(calendars = calendars, weights = weights), class = c("JD3_WEIGHTEDCALENDAR", "JD3_CALENDARDEFINITION")))
+    return(structure(
+        list(calendars = calendars, weights = weights),
+        class = c("JD3_WEIGHTEDCALENDAR", "JD3_CALENDARDEFINITION")
+    ))
 }
 
 .p2r_wcalendar <- function(p) {
@@ -772,13 +931,14 @@ weighted_calendar <- function(calendars, weights) {
     return(NULL)
 }
 
+#' @importFrom methods is
 .r2p_calendardef <- function(r) {
     p <- jd3.CalendarDefinition$new()
-    if (is(r, "JD3_CALENDAR")) {
+    if (methods::is(r, "JD3_CALENDAR")) {
         p$calendar <- .r2p_calendar(r)
-    } else if (is(r, "JD3_CHAINEDCALENDAR")) {
+    } else if (methods::is(r, "JD3_CHAINEDCALENDAR")) {
         p$chained_calendar <- .r2p_chainedcalendar(r)
-    } else if (is(r, "JD3_WEIGHTEDCALENDAR")) {
+    } else if (methods::is(r, "JD3_WEIGHTEDCALENDAR")) {
         p$weighted_calendar <- .r2p_wcalendar(r)
     }
     return(p)
@@ -824,8 +984,13 @@ weighted_calendar <- function(calendars, weights) {
 #' \url{https://doc.jdemetra.org/a-calendar-correction}
 #' @export
 national_calendar <- function(days = list(), mean_correction = TRUE) {
-    if (!is.list(days)) stop("Days should be a list of holidays")
-    return(structure(list(days = days, mean_correction = mean_correction), class = c("JD3_CALENDAR", "JD3_CALENDARDEFINITION")))
+    if (!is.list(days)) {
+        stop("Days should be a list of holidays")
+    }
+    return(structure(
+        list(days = days, mean_correction = mean_correction),
+        class = c("JD3_CALENDAR", "JD3_CALENDARDEFINITION")
+    ))
 }
 
 #' @title Trading day regressors with pre-defined holidays
@@ -835,23 +1000,27 @@ national_calendar <- function(days = list(), mean_correction = TRUE) {
 #' into account 7 or less different types of days, from Monday to Sunday, and
 #' specific holidays,which are to defined beforehand in a calendar using the
 #' functions `national_calendar`,`weighted_calendar` or `Chained_calendar`.
+#'
 #' @details
 #' Aggregated values for monthly or quarterly are the numbers of days belonging
 #' to a given group, holidays are all summed together in of those groups.
 #' Contrasts are the differences between the number of days in a given group
 #' (1 to 6) and the number of days in the reference group (0).
 #' Regressors are corrected for long-term mean if \code{contrasts = TRUE}.
+#'
 #' @inheritParams td
 #' @param calendar The calendar containing the required holidays
 #' @param holiday Day to aggregate holidays with. (holidays are considered as
 #' that day). 1 for Monday... 7 for Sunday. Doesn't necessary belong to the
 #' 0-group.
+#'
 #' @returns Time series (object of class \code{c("ts","mts","matrix")})
 #' corresponding to each group, starting with the 0-group
 #' (\code{contrasts = FALSE}) or the 1-group (\code{contrasts = TRUE}).
-#' @export
-#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #'
+#' @export
+#'
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' BE <- national_calendar(list(
 #'     fixed_day(7, 21),
 #'     special_day("NEWYEAR"),
@@ -874,31 +1043,62 @@ national_calendar <- function(days = list(), mean_correction = TRUE) {
 #' More information on calendar correction in JDemetra+ online documentation:
 #' \url{https://doc.jdemetra.org/a-calendar-correction}
 #'
-calendar_td <- function(calendar = national_calendar(),
-                        frequency,
-                        start,
-                        length,
-                        s,
-                        groups = c(1, 2, 3, 4, 5, 6, 0),
-                        holiday = 7,
-                        contrasts = TRUE) {
-    if (!is(calendar, "JD3_CALENDAR")) stop("Invalid calendar")
-    if (!missing(s) && is.ts(s)) {
+#' @importFrom rJava .jcall
+#'
+#' @importFrom stats is.ts
+#' @importFrom stats frequency
+#' @importFrom stats start
+#' @importFrom methods is
+calendar_td <- function(
+    calendar = national_calendar(),
+    frequency,
+    start,
+    length,
+    s,
+    groups = c(1, 2, 3, 4, 5, 6, 0),
+    holiday = 7,
+    contrasts = TRUE
+) {
+    if (!methods::is(calendar, "JD3_CALENDAR")) {
+        stop("Invalid calendar")
+    }
+    if (!missing(s) && stats::is.ts(s)) {
         frequency <- stats::frequency(s)
         start <- stats::start(s)
         length <- .length_ts(s)
     }
 
+    # Check start
+    checkmate::assert_integerish(start, min.len = 1L, max.len = 2L)
+    if (length(start) == 1L) {
+        start <- c(start, 1L)
+    }
+
+    # Check length
+    checkmate::assert_count(length)
+
+    # Check frequency
+    checkmate::assert_count(frequency, positive = TRUE)
+    checkmate::assert_choice(frequency, choices = c(1L, 2L, 3L, 4L, 6L, 12L))
+
     if (holiday != 7L) {
-        warning("holiday parameter is set to 7 (Sunday) by default and cannot be changed for the time being.")
+        warning(
+            "holiday parameter is set to 7 (Sunday) by default and cannot be changed for the time being."
+        )
     }
 
     jdom <- .r2jd_tsdomain(frequency, start[1], start[2], length)
     pcal <- .r2p_calendar(calendar)
     jcal <- .p2jd_calendar(pcal)
-    jm <- .jcall(
-        "jdplus/toolkit/base/r/modelling/Variables", "Ljdplus/toolkit/base/api/math/matrices/Matrix;",
-        "htd", jcal, jdom, as.integer(groups), as.integer(holiday), contrasts
+    jm <- rJava::.jcall(
+        "jdplus/toolkit/base/r/modelling/Variables",
+        "Ljdplus/toolkit/base/api/math/matrices/Matrix;",
+        "htd",
+        jcal,
+        jdom,
+        as.integer(groups),
+        as.integer(holiday),
+        contrasts
     )
     output <- .jd2r_matrix(jm)
     output <- .group_names(output, contrasts = contrasts)
@@ -944,12 +1144,28 @@ print.JD3_FIXEDDAY <- function(x, ...) {
     return(invisible(x))
 }
 
-DAYS <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+DAYS <- c(
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+)
 
 #' @export
 #' @rdname print_calendars
 print.JD3_FIXEDWEEKDAY <- function(x, ...) {
-    cat("Fixed week day: month=", x$month, ", day of the week=", DAYS[x$dayofweek], ", week=", x$week, sep = "")
+    cat(
+        "Fixed week day: month=",
+        x$month,
+        ", day of the week=",
+        DAYS[x$dayofweek],
+        ", week=",
+        x$week,
+        sep = ""
+    )
     .print_weight(x)
     .print_validityperiod(x)
     return(invisible(x))
@@ -968,7 +1184,9 @@ print.JD3_EASTERDAY <- function(x, ...) {
 #' @rdname print_calendars
 print.JD3_SPECIALDAY <- function(x, ...) {
     cat("Prespecified holiday: event=", x$event, sep = "")
-    if (x$offset != 0) cat(" , offset=", x$offset, sep = "")
+    if (x$offset != 0) {
+        cat(" , offset=", x$offset, sep = "")
+    }
     .print_weight(x)
     .print_validityperiod(x)
     return(invisible(x))
@@ -991,7 +1209,12 @@ print.JD3_CALENDAR <- function(x, ...) {
         print(day)
         cat("\n")
     }
-    cat("\nMean correction: ", ifelse(x$mean_correction, "Yes", "No"), "\n", sep = "")
+    cat(
+        "\nMean correction: ",
+        ifelse(x$mean_correction, "Yes", "No"),
+        "\n",
+        sep = ""
+    )
 
     return(invisible(x))
 }

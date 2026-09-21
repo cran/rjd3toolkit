@@ -2,97 +2,146 @@
 NULL
 #> NULL
 
-
+#' @importFrom rJava .jcall
+#' @importFrom rJava is.jnull
 .jd2r_test <- function(jtest) {
-    if (is.jnull(jtest)) {
+    if (rJava::is.jnull(jtest)) {
         return(NULL)
     } else {
-        desc <- .jcall(jtest, "S", "getDescription")
-        val <- .jcall(jtest, "D", "getValue")
-        pval <- .jcall(jtest, "D", "getPvalue")
+        desc <- rJava::.jcall(jtest, "S", "getDescription")
+        val <- rJava::.jcall(jtest, "D", "getValue")
+        pval <- rJava::.jcall(jtest, "D", "getPvalue")
         return(statisticaltest(val, pval, desc))
     }
 }
 
 
+#' @importFrom rJava .jcall
 .jd2r_regression_item <- function(s) {
-    desc <- .jcall(s, "S", "getDescription")
-    val <- .jcall(s, "D", "getCoefficient")
-    stderr <- .jcall(s, "D", "getStdError")
-    pval <- .jcall(s, "D", "getPvalue")
+    desc <- rJava::.jcall(s, "S", "getDescription")
+    val <- rJava::.jcall(s, "D", "getCoefficient")
+    stderr <- rJava::.jcall(s, "D", "getStdError")
+    pval <- rJava::.jcall(s, "D", "getPvalue")
     res <- matrix(c(val, stderr, val / stderr, pval), nrow = 1)
     colnames(res) <- c("Estimate", "Std. Error", "T-stat", "Pr(>|t|)")
     rownames(res) <- desc
     res
 }
+
+#' @importFrom rJava .jcall
 #' @export
 #' @rdname jd3_utilities
+#' @importFrom stats frequency
+#' @importFrom stats start
 .r2jd_tsdata <- function(s) {
     if (is.null(s)) {
         return(NULL)
     }
-    freq <- frequency(s)
-    start <- start(s)
-    .jcall(
-        "jdplus/toolkit/base/r/timeseries/TsUtility", "Ljdplus/toolkit/base/api/timeseries/TsData;", "of",
-        as.integer(freq), as.integer(start[1]), as.integer(start[2]), as.double(s)
+    freq <- stats::frequency(s)
+    start <- stats::start(s)
+    rJava::.jcall(
+        "jdplus/toolkit/base/r/timeseries/TsUtility",
+        "Ljdplus/toolkit/base/api/timeseries/TsData;",
+        "of",
+        as.integer(freq),
+        as.integer(start[1]),
+        as.integer(start[2]),
+        as.double(s)
     )
 }
 
+#' @importFrom rJava .jcall
 #' @export
 #' @rdname jd3_utilities
 .r2jd_tsdomain <- function(period, startYear, startPeriod, length) {
-    .jcall(
-        "jdplus/toolkit/base/r/timeseries/TsUtility", "Ljdplus/toolkit/base/api/timeseries/TsDomain;", "of",
-        as.integer(period), as.integer(startYear), as.integer(startPeriod), as.integer(length)
+    rJava::.jcall(
+        "jdplus/toolkit/base/r/timeseries/TsUtility",
+        "Ljdplus/toolkit/base/api/timeseries/TsDomain;",
+        "of",
+        as.integer(period),
+        as.integer(startYear),
+        as.integer(startPeriod),
+        as.integer(length)
     )
 }
 
+#' @importFrom rJava .jcall
+#' @importFrom rJava is.jnull
 #' @export
 #' @rdname jd3_utilities
+#' @importFrom stats ts
 .jd2r_tsdata <- function(s) {
-    if (is.jnull(s)) {
+    if (rJava::is.jnull(s)) {
         return(NULL)
     }
-    jx <- .jcall(s, "Ljdplus/toolkit/base/api/data/DoubleSeq;", "getValues")
-    x <- .jcall(jx, "[D", "toArray")
+    jx <- rJava::.jcall(
+        s,
+        "Ljdplus/toolkit/base/api/data/DoubleSeq;",
+        "getValues"
+    )
+    x <- rJava::.jcall(jx, "[D", "toArray")
     if (is.null(x)) {
         return(NULL)
     }
     if (length(x) == 0) {
         return(NULL)
     }
-    pstart <- .jcall("jdplus/toolkit/base/r/timeseries/TsUtility", "[I", "startPeriod", s)
-    ts(x, start = pstart[2:3], frequency = pstart[1])
+    pstart <- rJava::.jcall(
+        "jdplus/toolkit/base/r/timeseries/TsUtility",
+        "[I",
+        "startPeriod",
+        s
+    )
+    stats::ts(x, start = pstart[2:3], frequency = pstart[1])
 }
 
+#' @importFrom rJava .jcall
+#' @importFrom rJava is.jnull
 #' @export
 #' @rdname jd3_utilities
+#' @importFrom stats ts
 .jd2r_mts <- function(s) {
-    if (is.jnull(s)) {
+    if (rJava::is.jnull(s)) {
         return(NULL)
     }
-    jx <- .jcall(s, "Ljdplus/toolkit/base/api/math/matrices/Matrix;", "toMatrix")
+    jx <- rJava::.jcall(
+        s,
+        "Ljdplus/toolkit/base/api/math/matrices/Matrix;",
+        "toMatrix"
+    )
     x <- .jd2r_matrix(jx)
-    if (is.jnull(x)) {
+    if (rJava::is.jnull(x)) {
         return(NULL)
     }
-    pstart <- .jcall("jdplus/toolkit/base/r/timeseries/TsUtility", "[I", "startPeriod", s)
-    ts(x, start = pstart[2:3], frequency = pstart[1])
+    pstart <- rJava::.jcall(
+        "jdplus/toolkit/base/r/timeseries/TsUtility",
+        "[I",
+        "startPeriod",
+        s
+    )
+    stats::ts(x, start = pstart[2:3], frequency = pstart[1])
 }
 
+#' @importFrom rJava .jcall
 .extract_jts <- function(collection, index) {
-    js <- .jcall(collection, "Ljdplus/toolkit/base/api/timeseries/Ts;", "get", as.integer(index - 1))
+    js <- rJava::.jcall(
+        collection,
+        "Ljdplus/toolkit/base/api/timeseries/Ts;",
+        "get",
+        as.integer(index - 1)
+    )
     return(js)
 }
 
+#' @importFrom rJava .jcall
+#' @importFrom rJava is.jnull
 #' @export
 #' @rdname jd3_utilities
 .jd2r_lts <- function(s) {
-    if (is.jnull(s)) {
+    if (rJava::is.jnull(s)) {
         return(NULL)
     }
-    size <- .jcall(s, "I", "length")
+    size <- rJava::.jcall(s, "I", "length")
     if (size == 0) {
         return(NULL)
     }
@@ -105,72 +154,104 @@ NULL
     return(all)
 }
 
+#' @importFrom rJava .jcall
+#' @importFrom rJava is.jnull
 #' @export
 #' @rdname jd3_utilities
 .jd2r_matrix <- function(s) {
-    if (is.jnull(s)) {
+    if (rJava::is.jnull(s)) {
         return(NULL)
     }
-    nr <- .jcall(s, "I", "getRowsCount")
-    nc <- .jcall(s, "I", "getColumnsCount")
-    d <- .jcall(s, "[D", "toArray")
+    nr <- rJava::.jcall(s, "I", "getRowsCount")
+    nc <- rJava::.jcall(s, "I", "getColumnsCount")
+    d <- rJava::.jcall(s, "[D", "toArray")
     return(array(d, dim = c(nr, nc)))
 }
 
+#' @importFrom rJava .jcall
+#' @importFrom rJava .jnull
+#' @importFrom rJava .jarray
 #' @export
 #' @rdname jd3_utilities
 .r2jd_matrix <- function(s) {
     if (is.null(s)) {
-        return(.jnull("jdplus/toolkit/base/api/math/matrices/Matrix"))
+        return(rJava::.jnull("jdplus/toolkit/base/api/math/matrices/Matrix"))
     }
     if (!is.matrix(s)) {
         s <- matrix(s, nrow = length(s), ncol = 1)
     }
     sdim <- dim(s)
-    return(.jcall(
+    return(rJava::.jcall(
         obj = "jdplus/toolkit/base/api/math/matrices/Matrix",
         returnSig = "Ljdplus/toolkit/base/api/math/matrices/Matrix;",
         method = "of",
-        .jarray(as.double(s)), as.integer(sdim[1]), as.integer(sdim[2])
+        rJava::.jarray(as.double(s)),
+        as.integer(sdim[1]),
+        as.integer(sdim[2])
     ))
 }
 
+#' @importFrom rJava .jcall
+#' @importFrom rJava is.jnull
 .j2r_ldt <- function(ldt) {
-    if (is.jnull(ldt)) {
+    if (rJava::is.jnull(ldt)) {
         return(NULL)
     }
-    dt <- .jcall(ldt, "Ljava/time/LocalDate;", "toLocalDate")
-    return(as.Date(.jcall(dt, "S", "toString")))
+    dt <- rJava::.jcall(ldt, "Ljava/time/LocalDate;", "toLocalDate")
+    return(as.Date(rJava::.jcall(dt, "S", "toString")))
 }
 
+#' @importFrom rJava .jcall
+#' @importFrom rJava is.jnull
 .j2r_dt <- function(dt) {
-    if (is.jnull(dt)) {
+    if (rJava::is.jnull(dt)) {
         return(NULL)
     }
-    return(as.Date(.jcall(dt, "S", "toString")))
+    return(as.Date(rJava::.jcall(dt, "S", "toString")))
 }
 
+#' @importFrom rJava .jcall
+#' @importFrom rJava .jcast
+#' @importFrom rJava .jnew
 .r2j_dt <- function(dt) {
-    jdt <- .jnew("java/lang/String", as.character(dt))
-    return(.jcall("java/time/LocalDate", "Ljava/time/LocalDate;", "parse", .jcast(jdt, "java/lang/CharSequence")))
+    jdt <- rJava::.jnew("java/lang/String", as.character(dt))
+    return(rJava::.jcall(
+        "java/time/LocalDate",
+        "Ljava/time/LocalDate;",
+        "parse",
+        rJava::.jcast(jdt, "java/lang/CharSequence")
+    ))
 }
 
 .r2j_ldt <- function(dt) {
     jdt <- .r2j_dt(dt)
-    return(.jcall(jdt, "Ljava/time/LocalDateTime;", "atStartOfDay"))
+    return(rJava::.jcall(jdt, "Ljava/time/LocalDateTime;", "atStartOfDay"))
 }
 
+#' @importFrom rJava .jcall
+#' @importFrom rJava .jcastToArray
+#' @importFrom rJava is.jnull
 .jd2r_parameters <- function(jparams) {
-    if (is.jnull(jparams)) {
+    if (rJava::is.jnull(jparams)) {
         return(NULL)
     }
-    param <- .jcastToArray(jparams)
+    param <- rJava::.jcastToArray(jparams)
     len <- length(param)
     if (len == 0) {
         return(NULL)
     }
     param_name <- deparse(substitute(jparams))
-    Type <- sapply(param, function(x) .jcall(.jcall(x, "Ljdplus/toolkit/base/api/data/ParameterType;", "getType"), "S", "name"))
+    Type <- sapply(param, function(x) {
+        rJava::.jcall(
+            rJava::.jcall(
+                x,
+                "Ljdplus/toolkit/base/api/data/ParameterType;",
+                "getType"
+            ),
+            "S",
+            "name"
+        )
+    })
     Value <- sapply(param, FUN = .jcall, returnSig = "D", method = "getValue")
     data_param <- data.frame(Type = Type, Value = Value)
     rownames(data_param) <- sprintf(
@@ -181,11 +262,13 @@ NULL
     data_param
 }
 
+#' @importFrom rJava .jcall
+#' @importFrom rJava .jnull
 #' @export
 #' @rdname jd3_utilities
 .jdomain <- function(period, start, end) {
     if (period == 0) {
-        return(.jnull("jdplus/toolkit/base/api/timeseries/TsDomain"))
+        return(rJava::.jnull("jdplus/toolkit/base/api/timeseries/TsDomain"))
     }
     if (is.null(start)) {
         start <- c(1900, 1)
@@ -194,9 +277,14 @@ NULL
         end <- c(2100, 1)
     }
     n <- period * (end[1] - start[1]) + end[2] - start[2]
-    jdom <- .jcall(
-        "jdplus/toolkit/base/r/timeseries/TsUtility", "Ljdplus/toolkit/base/api/timeseries/TsDomain;", "of",
-        as.integer(period), as.integer(start[1]), as.integer(start[2]), as.integer(n)
+    jdom <- rJava::.jcall(
+        "jdplus/toolkit/base/r/timeseries/TsUtility",
+        "Ljdplus/toolkit/base/api/timeseries/TsDomain;",
+        "of",
+        as.integer(period),
+        as.integer(start[1]),
+        as.integer(start[2]),
+        as.integer(n)
     )
     return(jdom)
 }

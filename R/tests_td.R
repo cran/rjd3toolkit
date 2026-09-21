@@ -50,13 +50,25 @@ NULL
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' td_f(ABS$X0.2.09.10.M)
+#'
 #' @export
-td_f <- function(s, model = c("D1", "DY", "DYD1", "WN", "AIRLINE", "R011", "R100"), nyears = 0) {
+#'
+#' @importFrom rJava .jcall
+#'
+td_f <- function(
+    s,
+    model = c("D1", "DY", "DYD1", "WN", "AIRLINE", "R011", "R100"),
+    nyears = 0
+) {
     model <- match.arg(model)
     jts <- .r2jd_tsdata(s)
-    jtest <- .jcall(
-        "jdplus/toolkit/base/r/modelling/TradingDaysTests", "Ljdplus/toolkit/base/api/stats/StatisticalTest;", "fTest",
-        jts, model, as.integer(nyears)
+    jtest <- rJava::.jcall(
+        "jdplus/toolkit/base/r/modelling/TradingDaysTests",
+        "Ljdplus/toolkit/base/api/stats/StatisticalTest;",
+        "fTest",
+        jts,
+        model,
+        as.integer(nyears)
     )
     return(.jd2r_test(jtest))
 }
@@ -68,24 +80,43 @@ td_f <- function(s, model = c("D1", "DY", "DYD1", "WN", "AIRLINE", "R011", "R100
 #' @param kernel Kernel used to compute the robust covariance matrix.
 #' @param order The truncation parameter used to compute the robust covariance matrix.
 #'
-#' @returns list with the ftest on td, the joint test and the details for the stability of the different days (starting with Mondays).
+#' @returns list with the F-Test on td, the joint test and the details for the stability of the different days (starting with Mondays).
+#'
 #' @export
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' s <- log(ABS$X0.2.20.10.M)
 #' td_canovahansen(s, c(1, 12))
-td_canovahansen <- function(s, differencing, kernel = c("Bartlett", "Square", "Welch", "Tukey", "Hamming", "Parzen"),
-                            order = NA) {
+#'
+#' @importFrom rJava .jarray
+#' @importFrom rJava .jcall
+td_canovahansen <- function(
+    s,
+    differencing,
+    kernel = c("Bartlett", "Square", "Welch", "Tukey", "Hamming", "Parzen"),
+    order = NA
+) {
     kernel <- match.arg(kernel)
-    if (is.na(order)) order <- -1
+    if (is.na(order)) {
+        order <- -1
+    }
     jts <- .r2jd_tsdata(s)
-    q <- .jcall(
-        "jdplus/toolkit/base/r/modelling/TradingDaysTests", "[D", "canovaHansen",
-        jts, .jarray(as.integer(differencing)), kernel, as.integer(order)
+    q <- rJava::.jcall(
+        "jdplus/toolkit/base/r/modelling/TradingDaysTests",
+        "[D",
+        "canovaHansen",
+        jts,
+        rJava::.jarray(as.integer(differencing)),
+        kernel,
+        as.integer(order)
     )
 
     last <- length(q)
-    return(list(td = list(value = q[last - 1], pvalue = q[last]), joint = q[last - 2], details = q[-c(last - 2, last - 1, last)]))
+    return(list(
+        td = list(value = q[last - 1], pvalue = q[last]),
+        joint = q[last - 2],
+        details = q[-c(last - 2, last - 1, last)]
+    ))
 }
 
 #' @title Likelihood ratio test on time varying trading days
@@ -102,12 +133,22 @@ td_canovahansen <- function(s, differencing, kernel = c("Bartlett", "Square", "W
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' s <- log(ABS$X0.2.20.10.M)
 #' td_timevarying(s)
-td_timevarying <- function(s, groups = c(1, 2, 3, 4, 5, 6, 0), contrasts = FALSE) {
+#'
+#' @importFrom rJava .jcall
+td_timevarying <- function(
+    s,
+    groups = c(1, 2, 3, 4, 5, 6, 0),
+    contrasts = FALSE
+) {
     jts <- .r2jd_tsdata(s)
     igroups <- as.integer(groups)
-    jtest <- .jcall(
-        "jdplus/toolkit/base/r/modelling/TradingDaysTests", "Ljdplus/toolkit/base/api/stats/StatisticalTest;", "timeVaryingTradingDaysTest",
-        jts, igroups, as.logical(contrasts)
+    jtest <- rJava::.jcall(
+        "jdplus/toolkit/base/r/modelling/TradingDaysTests",
+        "Ljdplus/toolkit/base/api/stats/StatisticalTest;",
+        "timeVaryingTradingDaysTest",
+        jts,
+        igroups,
+        as.logical(contrasts)
     )
     return(.jd2r_test(jtest))
 }

@@ -20,7 +20,7 @@
 #' @details
 #' \code{x} specification parameter must be a JD3_X13_SPEC" class object
 #' generated with \code{rjd3x13::x13_spec()} (or "JD3_REGARIMA_SPEC" generated
-#' with \code{rjd3x13::spec_regarima()} or "JD3_TRAMOSEATS_SPEC" generated with
+#' with \code{rjd3x13::spec_regarima()} or `"JD3_TRAMOSEATS_SPEC"` generated with
 #' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}). If a Seasonal adjustment process is
 #' performed, each type of Outlier will be allocated to a pre-defined component
@@ -46,20 +46,24 @@
 #' More information on outliers and other auxiliary variables in JDemetra+ online documentation:
 #' \url{https://doc.jdemetra.org/a-outlier-detection}
 #' @export
-add_outlier <- function(x,
-                        type,
-                        date,
-                        name = sprintf("%s (%s)", type, date),
-                        coef = 0) {
+add_outlier <- function(
+    x,
+    type,
+    date,
+    name = sprintf("%s (%s)", type, date),
+    coef = 0
+) {
     UseMethod("add_outlier", x)
 }
 
 #' @export
-add_outlier.default <- function(x,
-                                type,
-                                date,
-                                name = sprintf("%s (%s)", type, date),
-                                coef = 0) {
+add_outlier.default <- function(
+    x,
+    type,
+    date,
+    name = sprintf("%s (%s)", type, date),
+    coef = 0
+) {
     type <- match.arg(
         toupper(type),
         choices = c("AO", "TC", "LS", "SO"),
@@ -91,7 +95,12 @@ add_outlier.default <- function(x,
 }
 
 .create_outlier <- function(code, pos, name = NULL, coef = NULL) {
-    res <- list(name = name, pos = pos, code = code, coef = .fixed_parameter(coef))
+    res <- list(
+        name = name,
+        pos = pos,
+        code = code,
+        coef = .fixed_parameter(coef)
+    )
     return(res)
 }
 .fixed_parameters <- function(coef) {
@@ -115,25 +124,22 @@ add_outlier.default <- function(x,
 }
 
 
-
 #' @rdname add_outlier
 #' @export
-remove_outlier <- function(x,
-                           type = NULL,
-                           date = NULL,
-                           name = NULL) {
+remove_outlier <- function(x, type = NULL, date = NULL, name = NULL) {
     UseMethod("remove_outlier", x)
 }
 
 #' @export
-remove_outlier.default <- function(x,
-                                   type = NULL,
-                                   date = NULL,
-                                   name = NULL) {
+remove_outlier.default <- function(x, type = NULL, date = NULL, name = NULL) {
     if (is.null(x$regression$outliers)) {
         return(x)
     }
-    out_mat <- simplify2array(x$regression$outliers)[c("code", "pos", "name"), , drop = FALSE]
+    out_mat <- simplify2array(x$regression$outliers)[
+        c("code", "pos", "name"),
+        ,
+        drop = FALSE
+    ]
     if (is.null(type)) {
         out_mat["code", ] <- ""
     } else {
@@ -166,20 +172,24 @@ remove_outlier.default <- function(x,
 
 #' @rdname add_outlier
 #' @export
-add_ramp <- function(x,
-                     start,
-                     end,
-                     name = sprintf("rp.%s - %s", start, end),
-                     coef = 0) {
+add_ramp <- function(
+    x,
+    start,
+    end,
+    name = sprintf("rp.%s - %s", start, end),
+    coef = 0
+) {
     UseMethod("add_ramp", x)
 }
 
 #' @export
-add_ramp.default <- function(x,
-                             start,
-                             end,
-                             name = sprintf("rp.%s - %s", start, end),
-                             coef = 0) {
+add_ramp.default <- function(
+    x,
+    start,
+    end,
+    name = sprintf("rp.%s - %s", start, end),
+    coef = 0
+) {
     # data.frame to recycle arguments
     new_ramp <- data.frame(start, end, name, coef)
     new_ramp <- as.list(new_ramp)
@@ -206,28 +216,31 @@ add_ramp.default <- function(x,
 }
 
 .create_ramp <- function(start, end, name = NULL, coef = NULL) {
-    res <- list(name = name, start = start, end = end, coef = .fixed_parameter(coef))
+    res <- list(
+        name = name,
+        start = start,
+        end = end,
+        coef = .fixed_parameter(coef)
+    )
     return(res)
 }
 
 #' @rdname add_outlier
 #' @export
-remove_ramp <- function(x,
-                        start = NULL,
-                        end = NULL,
-                        name = NULL) {
+remove_ramp <- function(x, start = NULL, end = NULL, name = NULL) {
     UseMethod("remove_ramp", x)
 }
 
 #' @export
-remove_ramp.default <- function(x,
-                                start = NULL,
-                                end = NULL,
-                                name = NULL) {
+remove_ramp.default <- function(x, start = NULL, end = NULL, name = NULL) {
     if (is.null(x$regression$ramps)) {
         return(x)
     }
-    rp_mat <- simplify2array(x$regression$ramps)[c("start", "end", "name"), , drop = FALSE]
+    rp_mat <- simplify2array(x$regression$ramps)[
+        c("start", "end", "name"),
+        ,
+        drop = FALSE
+    ]
     if (is.null(start)) {
         rp_mat["start", ] <- ""
     }
@@ -262,7 +275,7 @@ remove_ramp.default <- function(x,
 #'
 #' @param type,d0,d1,n0,n1 parameters to specify the sub-span .
 #'
-#' \code{d0} and \code{d1} characters in the format "YYYY-MM-DD" to specify
+#' \code{d0} and \code{d1} characters in the format `"YYYY-MM-DD"` to specify
 #' first/last date of the span when \code{type} equals to \code{"From"},
 #' \code{"To"} or \code{"Between"}.
 #' Date corresponding to \code{d0} will be included in the sub-span
@@ -286,7 +299,7 @@ remove_ramp.default <- function(x,
 #' @details
 #' \code{x} specification parameter must be a JD3_X13_SPEC" class object
 #' generated with \code{rjd3x13::x13_spec()} (or "JD3_REGARIMA_SPEC" generated
-#' with \code{rjd3x13::spec_regarima()} or "JD3_TRAMOSEATS_SPEC" generated with
+#' with \code{rjd3x13::spec_regarima()} or `"JD3_TRAMOSEATS_SPEC"` generated with
 #' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
@@ -338,33 +351,39 @@ remove_ramp.default <- function(x,
 #' More information in JDemetra+ online documentation:
 #' \url{https://doc.jdemetra.org/a-sa-pre-treatment#sa-pre-t-spans}
 #' @export
-set_basic <- function(x,
-                      type = c(NA, "All", "From", "To", "Between", "Last", "First", "Excluding"),
-                      d0 = NULL,
-                      d1 = NULL,
-                      n0 = 0,
-                      n1 = 0,
-                      preliminary.check = NA,
-                      preprocessing = NA) {
+set_basic <- function(
+    x,
+    type = c(NA, "All", "From", "To", "Between", "Last", "First", "Excluding"),
+    d0 = NULL,
+    d1 = NULL,
+    n0 = 0,
+    n1 = 0,
+    preliminary.check = NA,
+    preprocessing = NA
+) {
     UseMethod("set_basic", x)
 }
 #' @export
-set_basic.default <- function(x,
-                              type = c(NA, "All", "From", "To", "Between", "Last", "First", "Excluding"),
-                              d0 = NULL,
-                              d1 = NULL,
-                              n0 = 0,
-                              n1 = 0,
-                              preliminary.check = NA,
-                              preprocessing = NA) {
+set_basic.default <- function(
+    x,
+    type = c(NA, "All", "From", "To", "Between", "Last", "First", "Excluding"),
+    d0 = NULL,
+    d1 = NULL,
+    n0 = 0,
+    n1 = 0,
+    preliminary.check = NA,
+    preprocessing = NA
+) {
     basic <- x$basic
     is_tramo <- inherits(x, "JD3_TRAMO_SPEC")
 
     basic$span <- set_span(
         x = basic$span,
         type = type,
-        d0 = d0, d1 = d1,
-        n0 = n0, n1 = n1
+        d0 = d0,
+        d1 = d1,
+        n0 = n0,
+        n1 = n1
     )
     if (!missing(preprocessing) && !is.na(preprocessing) && !is_tramo) {
         basic$preprocessing <- preprocessing
@@ -380,7 +399,7 @@ set_basic.default <- function(x,
 #'
 #' @description
 #' Function allowing to define numeric boundaries for estimation and to define
-#' a sub-span on which reg-arima (tramo) modelling will be performed
+#' a sub-span on which Reg-ARIMA (Tramo) modelling will be performed
 #' (pre-processing step)
 #'
 #' @inheritParams set_basic
@@ -389,12 +408,12 @@ set_basic.default <- function(x,
 #' log-likelihood function are compared to this value to check for the
 #' convergence of the estimation iterations. (The default setting is 0.0000001)
 #'
-#' @param exact.ml (TRAMO specific) \code{logical}, the exact maximum likelihood
+#' @param exact.ml (Tramo specific) \code{logical}, the exact maximum likelihood
 #' estimation. If \code{TRUE}, the program performs an exact maximum likelihood
 #' estimation. If \code{FASLE}, the Unconditional Least Squares method is used.
 #' (Default=TRUE)
 #'
-#' @param unit.root.limit (TRAMO specific) \code{numeric}, the final unit root
+#' @param unit.root.limit (Tramo specific) \code{numeric}, the final unit root
 #' limit. The threshold value for the final unit root test for identification of
 #' differencing orders. If the magnitude of an AR root for the final model is
 #' smaller than this number, then a unit root is assumed, the order of the AR
@@ -405,9 +424,9 @@ set_basic.default <- function(x,
 #'
 #' @details
 #' \code{x} specification parameter must be a JD3_X13_SPEC" class object
-#' generated with \code{rjd3x13::x13_spec()} (or "JD3_REGARIMA_SPEC" generated
-#' with \code{rjd3x13::spec_regarima()} or "JD3_TRAMOSEATS_SPEC" generated with
-#' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
+#' generated with \code{rjd3x13::x13_spec()} (or `"JD3_REGARIMA_SPEC"` generated
+#' with \code{rjd3x13::spec_regarima()} or `"JD3_TRAMOSEATS_SPEC"` generated with
+#' \code{rjd3tramoseats::spec_tramoseats()} or `"JD3_TRAMO_SPEC"` generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
@@ -428,36 +447,42 @@ set_basic.default <- function(x,
 #' \url{https://doc.jdemetra.org/a-sa-pre-treatment#sa-pre-t-spans}
 #'
 #' @export
-set_estimate <- function(x,
-                         type = c(NA, "All", "From", "To", "Between", "Last", "First", "Excluding"),
-                         d0 = NULL,
-                         d1 = NULL,
-                         n0 = 0,
-                         n1 = 0,
-                         tol = NA,
-                         # TRAMO SPECIFIC
-                         exact.ml = NA,
-                         unit.root.limit = NA) {
+set_estimate <- function(
+    x,
+    type = c(NA, "All", "From", "To", "Between", "Last", "First", "Excluding"),
+    d0 = NULL,
+    d1 = NULL,
+    n0 = 0,
+    n1 = 0,
+    tol = NA,
+    # TRAMO SPECIFIC
+    exact.ml = NA,
+    unit.root.limit = NA
+) {
     UseMethod("set_estimate", x)
 }
 #' @export
-set_estimate.default <- function(x,
-                                 type = c("All", "From", "To", "Between", "Last", "First", "Excluding"),
-                                 d0 = NULL,
-                                 d1 = NULL,
-                                 n0 = 0,
-                                 n1 = 0,
-                                 tol = NA,
-                                 # TRAMO SPECIFIC
-                                 exact.ml = NA,
-                                 unit.root.limit = NA) {
+set_estimate.default <- function(
+    x,
+    type = c("All", "From", "To", "Between", "Last", "First", "Excluding"),
+    d0 = NULL,
+    d1 = NULL,
+    n0 = 0,
+    n1 = 0,
+    tol = NA,
+    # TRAMO SPECIFIC
+    exact.ml = NA,
+    unit.root.limit = NA
+) {
     estimate <- x$estimate
     is_tramo <- inherits(x, "JD3_TRAMO_SPEC")
     estimate$span <- set_span(
         x = estimate$span,
         type = type,
-        d0 = d0, d1 = d1,
-        n0 = n0, n1 = n1
+        d0 = d0,
+        d1 = d1,
+        n0 = n0,
+        n1 = n1
     )
     if (!missing(tol) && !is.na(tol)) {
         estimate$tol <- tol
@@ -477,13 +502,13 @@ set_estimate.default <- function(x,
 #' @title Set Outlier Detection Parameters
 #'
 #' @description Function allowing to customize the automatic outlier detection
-#' process built in in the pre-processing step (regarima or tramo).
+#' process built in in the pre-processing step (Reg-ARIMA or Tramo).
 #'
 #' @inheritParams set_basic
 #' @param span.type,d0,d1,n0,n1 parameters to specify the sub-span on which
 #' outliers will be detected.
 #'
-#' - \code{d0} and \code{d1} characters in the format "YYYY-MM-DD" to specify
+#' - \code{d0} and \code{d1} characters in the format `"YYYY-MM-DD"` to specify
 #'  first/last date of the span when \code{type} equals to \code{"From"},
 #'  \code{"To"} or \code{"Between"}.
 #' - \code{n0} and \code{n1} numerics to specify the number of periods at the
@@ -527,10 +552,10 @@ set_estimate.default <- function(x,
 #' @returns The modified specification (with new outlier parameters)
 #'
 #' @details
-#' \code{x} specification parameter must be a JD3_X13_SPEC" class object
-#' generated with \code{rjd3x13::x13_spec()} (or "JD3_REGARIMA_SPEC" generated
-#' with \code{rjd3x13::spec_regarima()} or "JD3_TRAMOSEATS_SPEC" generated with
-#' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
+#' \code{x} specification parameter must be a `"JD3_X13_SPEC"` class object
+#' generated with \code{rjd3x13::x13_spec()} (or `"JD3_REGARIMA_SPEC"` generated
+#' with \code{rjd3x13::spec_regarima()} or `"JD3_TRAMOSEATS_SPEC"` generated with
+#' \code{rjd3tramoseats::spec_tramoseats()} or `"JD3_TRAMO_SPEC"` generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
 #' If a Seasonal adjustment process is performed, each type of Outlier will be
@@ -558,45 +583,69 @@ set_estimate.default <- function(x,
 #'
 #' @export
 #'
-set_outlier <- function(x,
-                        span.type = c(NA, "All", "From", "To", "Between", "Last", "First", "Excluding"),
-                        d0 = NULL,
-                        d1 = NULL,
-                        n0 = 0,
-                        n1 = 0,
-                        outliers.type = NA,
-                        critical.value = NA,
-                        tc.rate = NA,
-                        # REGARIMA SPECIFIC
-                        method = c(NA, "AddOne", "AddAll"),
-                        maxiter = NA,
-                        lsrun = NA,
-                        # TRAMO SPECIFIC
-                        eml.est = NA) {
+set_outlier <- function(
+    x,
+    span.type = c(
+        NA,
+        "All",
+        "From",
+        "To",
+        "Between",
+        "Last",
+        "First",
+        "Excluding"
+    ),
+    d0 = NULL,
+    d1 = NULL,
+    n0 = 0,
+    n1 = 0,
+    outliers.type = NA,
+    critical.value = NA,
+    tc.rate = NA,
+    # REGARIMA SPECIFIC
+    method = c(NA, "AddOne", "AddAll"),
+    maxiter = NA,
+    lsrun = NA,
+    # TRAMO SPECIFIC
+    eml.est = NA
+) {
     UseMethod("set_outlier", x)
 }
 #' @export
-set_outlier.default <- function(x,
-                                span.type = c(NA, "All", "From", "To", "Between", "Last", "First", "Excluding"),
-                                d0 = NULL,
-                                d1 = NULL,
-                                n0 = 0,
-                                n1 = 0,
-                                outliers.type = NA,
-                                critical.value = NA,
-                                tc.rate = NA,
-                                # REGARIMA SPECIFIC
-                                method = c(NA, "AddOne", "AddAll"),
-                                maxiter = NA,
-                                lsrun = NA,
-                                # TRAMO SPECIFIC
-                                eml.est = NA) {
+set_outlier.default <- function(
+    x,
+    span.type = c(
+        NA,
+        "All",
+        "From",
+        "To",
+        "Between",
+        "Last",
+        "First",
+        "Excluding"
+    ),
+    d0 = NULL,
+    d1 = NULL,
+    n0 = 0,
+    n1 = 0,
+    outliers.type = NA,
+    critical.value = NA,
+    tc.rate = NA,
+    # REGARIMA SPECIFIC
+    method = c(NA, "AddOne", "AddAll"),
+    maxiter = NA,
+    lsrun = NA,
+    # TRAMO SPECIFIC
+    eml.est = NA
+) {
     outlier <- x$outlier
     outlier$span <- set_span(
         x = outlier$span,
         type = span.type,
-        d0 = d0, d1 = d1,
-        n0 = n0, n1 = n1
+        d0 = d0,
+        d1 = d1,
+        n0 = n0,
+        n1 = n1
     )
     # to set specific TRAMO/REGARIMA values
     is_tramo <- inherits(x, "JD3_TRAMO_SPEC")
@@ -706,12 +755,12 @@ set_outlier.default <- function(x,
 #'  differencing order changes).
 #'  Default = 1.136364.
 #'
-#' @param reducecv \code{numeric}, ReduceCV. The percentage by which the outlier
+#' @param reducecv \code{numeric}, `ReduceCV`. The percentage by which the outlier
 #'  critical value will be reduced when an identified model is found to have a
 #'  Ljung-Box statistic with an unacceptable confidence coefficient.
 #'  The parameter should be between 0 and 1, and will only be active when
 #'  automatic outlier identification is enabled. The reduced critical value will
-#'  be set to (1 - ReduceCV) x CV, where CV is the original critical value.
+#'  be set to (1 - `ReduceCV`) x `CV`, where `CV` is the original critical value.
 #'  Default =  0.14268.
 #'
 #' @param ljungboxlimit \code{numeric}, the Ljung Box limit, setting the
@@ -765,7 +814,7 @@ set_outlier.default <- function(x,
 #' @details
 #' \code{x} specification parameter must be a JD3_X13_SPEC" class object
 #' generated with \code{rjd3x13::x13_spec()} (or "JD3_REGARIMA_SPEC" generated
-#' with \code{rjd3x13::spec_regarima()} or "JD3_TRAMOSEATS_SPEC" generated with
+#' with \code{rjd3x13::spec_regarima()} or `"JD3_TRAMOSEATS_SPEC"` generated with
 #' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
@@ -783,41 +832,45 @@ set_outlier.default <- function(x,
 #'
 #' @export
 #'
-set_automodel <- function(x,
-                          enabled = NA,
-                          acceptdefault = NA,
-                          cancel = NA,
-                          ub1 = NA,
-                          ub2 = NA,
-                          reducecv = NA,
-                          ljungboxlimit = NA,
-                          tsig = NA,
-                          # REGARIMA SPECIFIC
-                          ubfinal = NA,
-                          checkmu = NA,
-                          mixed = NA,
-                          balanced = NA,
-                          # TRAMO SPECIFIC
-                          amicompare = NA) {
+set_automodel <- function(
+    x,
+    enabled = NA,
+    acceptdefault = NA,
+    cancel = NA,
+    ub1 = NA,
+    ub2 = NA,
+    reducecv = NA,
+    ljungboxlimit = NA,
+    tsig = NA,
+    # REGARIMA SPECIFIC
+    ubfinal = NA,
+    checkmu = NA,
+    mixed = NA,
+    balanced = NA,
+    # TRAMO SPECIFIC
+    amicompare = NA
+) {
     UseMethod("set_automodel", x)
 }
 #' @export
-set_automodel.default <- function(x,
-                                  enabled = NA,
-                                  acceptdefault = NA,
-                                  cancel = NA,
-                                  ub1 = NA,
-                                  ub2 = NA,
-                                  reducecv = NA,
-                                  ljungboxlimit = NA,
-                                  tsig = NA,
-                                  # REGARIMA SPECIFIC
-                                  ubfinal = NA,
-                                  checkmu = NA,
-                                  mixed = NA,
-                                  balanced = NA,
-                                  # TRAMO SPECIFIC
-                                  amicompare = NA) {
+set_automodel.default <- function(
+    x,
+    enabled = NA,
+    acceptdefault = NA,
+    cancel = NA,
+    ub1 = NA,
+    ub2 = NA,
+    reducecv = NA,
+    ljungboxlimit = NA,
+    tsig = NA,
+    # REGARIMA SPECIFIC
+    ubfinal = NA,
+    checkmu = NA,
+    mixed = NA,
+    balanced = NA,
+    # TRAMO SPECIFIC
+    amicompare = NA
+) {
     fct <- NA
     automodel <- x$automodel
 
@@ -907,7 +960,7 @@ set_automodel.default <- function(x,
 #'
 #' @details
 #' \code{x} specification parameter must be a JD3_X13_SPEC" class object generated with \code{rjd3x13::x13_spec()}
-#' (or "JD3_REGARIMA_SPEC" generated with \code{rjd3x13::spec_regarima()} or "JD3_TRAMOSEATS_SPEC"
+#' (or "JD3_REGARIMA_SPEC" generated with \code{rjd3x13::spec_regarima()} or `"JD3_TRAMOSEATS_SPEC"`
 #' generated with \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #' @seealso \code{\link{set_automodel}}, \code{\link{set_transform}}
@@ -937,34 +990,40 @@ set_automodel.default <- function(x,
 #' More information on reg-arima modelling in JDemetra+ online documentation:
 #' \url{https://doc.jdemetra.org/}
 #' @export
-set_arima <- function(x,
-                      mean = NA,
-                      mean.type = c(NA, "Undefined", "Fixed", "Initial"),
-                      p = NA,
-                      d = NA,
-                      q = NA,
-                      bp = NA,
-                      bd = NA,
-                      bq = NA,
-                      coef = NA,
-                      coef.type = c(NA, "Undefined", "Fixed", "Initial")) {
+set_arima <- function(
+    x,
+    mean = NA,
+    mean.type = c(NA, "Undefined", "Fixed", "Initial"),
+    p = NA,
+    d = NA,
+    q = NA,
+    bp = NA,
+    bd = NA,
+    bq = NA,
+    coef = NA,
+    coef.type = c(NA, "Undefined", "Fixed", "Initial")
+) {
     UseMethod("set_arima", x)
 }
 #' @export
-set_arima.default <- function(x,
-                              mean = NA,
-                              mean.type = c(NA, "Undefined", "Fixed", "Initial"),
-                              p = NA,
-                              d = NA,
-                              q = NA,
-                              bp = NA,
-                              bd = NA,
-                              bq = NA,
-                              coef = NA,
-                              coef.type = c(NA, "Undefined", "Fixed", "Initial")) {
+set_arima.default <- function(
+    x,
+    mean = NA,
+    mean.type = c(NA, "Undefined", "Fixed", "Initial"),
+    p = NA,
+    d = NA,
+    q = NA,
+    bp = NA,
+    bd = NA,
+    bq = NA,
+    coef = NA,
+    coef.type = c(NA, "Undefined", "Fixed", "Initial")
+) {
     arima <- x$arima
     if (x$automodel$enabled) {
-        warning("autmodel enabled: the parameters will not impact the final parameters")
+        warning(
+            "autmodel enabled: the parameters will not impact the final parameters"
+        )
     }
     if (!is.na(d)) {
         arima$d <- d
@@ -1009,7 +1068,6 @@ set_arima.default <- function(x,
             arima_params$value <- as.list(arima_params$value)
             arima_params$type <- as.list(arima_params$type)
         }
-
 
         if (!is.na(p)) {
             if (p == 0) {
@@ -1097,7 +1155,7 @@ set_arima.default <- function(x,
 #'  - \code{"TD4"} = three contrast variables: week-days (Mondays to Thursdays)
 #'      vs Sundays, Fridays vs Sundays, Saturdays vs Sundays;
 #'  - \code{"None"} = no correction for trading days;
-#'  - \code{"UserDefined"} = userdefined trading days regressors.
+#'  - \code{"UserDefined"} = user-defined trading days regressors.
 #'
 #' @param calendar.name name (string) of the user-defined calendar to be taken
 #'  into account when generating built-in regressors set in \code{option} (if
@@ -1123,7 +1181,7 @@ set_arima.default <- function(x,
 #'      regression model but can be removed from the RegARIMA model after the
 #'      test;
 #'
-#' (TRAMO specific)
+#' (Tramo specific)
 #'
 #'  - \code{"Separate_T"} = a t-test is applied to each trading day variable
 #'      separately and the trading day variables are included in the RegArima
@@ -1138,7 +1196,7 @@ set_arima.default <- function(x,
 #' @param automatic defines whether the calendar effects should be added to the
 #'  model manually (\code{"Unused"}) or automatically. During the automatic
 #'  selection, the choice of the number of calendar variables can be based on
-#'  the F-Test (\code{"FTest"}, TRAMO specific), the Wald Test
+#'  the F-Test (\code{"FTest"}, Tramo specific), the Wald Test
 #'  (\code{"WaldTest"}), or by minimizing AIC or BIC; the model with higher
 #'  F-value is chosen, provided that it is higher than \code{pftd}).
 #'
@@ -1166,7 +1224,7 @@ set_arima.default <- function(x,
 #' @details
 #' \code{x} specification parameter must be a JD3_X13_SPEC" class object
 #' generated with \code{rjd3x13::x13_spec()} (or "JD3_REGARIMA_SPEC" generated
-#' with \code{rjd3x13::spec_regarima()} or "JD3_TRAMOSEATS_SPEC" generated with
+#' with \code{rjd3x13::spec_regarima()} or `"JD3_TRAMOSEATS_SPEC"` generated with
 #' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
@@ -1250,42 +1308,66 @@ set_arima.default <- function(x,
 #' # Estimate with context
 #' # sa <- rjd3x13::x13(y_raw, new_spec, context = my_context)
 #' @export
-set_tradingdays <- function(x,
-                            option = c(NA, "TradingDays", "WorkingDays", "TD2c", "TD3", "TD3c", "TD4", "None", "UserDefined"),
-                            calendar.name = NA,
-                            uservariable = NA,
-                            stocktd = NA,
-                            test = c(NA, "None", "Remove", "Add", "Separate_T", "Joint_F"),
-                            coef = NA,
-                            coef.type = c(NA, "Fixed", "Estimated"),
-                            automatic = c(NA, "Unused", "FTest", "WaldTest", "Aic", "Bic"),
-                            # TRAMO SPECIFIC
-                            pftd = NA,
-                            # LEAP YEAR
-                            autoadjust = NA,
-                            leapyear = c(NA, "LeapYear", "LengthOfPeriod", "None"),
-                            leapyear.coef = NA,
-                            leapyear.coef.type = c(NA, "Fixed", "Estimated")) {
+set_tradingdays <- function(
+    x,
+    option = c(
+        NA,
+        "TradingDays",
+        "WorkingDays",
+        "TD2c",
+        "TD3",
+        "TD3c",
+        "TD4",
+        "None",
+        "UserDefined"
+    ),
+    calendar.name = NA,
+    uservariable = NA,
+    stocktd = NA,
+    test = c(NA, "None", "Remove", "Add", "Separate_T", "Joint_F"),
+    coef = NA,
+    coef.type = c(NA, "Fixed", "Estimated"),
+    automatic = c(NA, "Unused", "FTest", "WaldTest", "Aic", "Bic"),
+    # TRAMO SPECIFIC
+    pftd = NA,
+    # LEAP YEAR
+    autoadjust = NA,
+    leapyear = c(NA, "LeapYear", "LengthOfPeriod", "None"),
+    leapyear.coef = NA,
+    leapyear.coef.type = c(NA, "Fixed", "Estimated")
+) {
     UseMethod("set_tradingdays", x)
 }
 
 #' @export
-set_tradingdays.default <- function(x,
-                                    option = c(NA, "TradingDays", "WorkingDays", "TD2c", "TD3", "TD3c", "TD4", "None", "UserDefined"),
-                                    calendar.name = NA,
-                                    uservariable = NA,
-                                    stocktd = NA,
-                                    test = c(NA, "None", "Remove", "Add", "Separate_T", "Joint_F"),
-                                    coef = NA,
-                                    coef.type = c(NA, "Estimated", "Fixed"),
-                                    automatic = c(NA, "Unused", "FTest", "WaldTest", "Aic", "Bic"),
-                                    # TRAMO SPECIFIC
-                                    pftd = NA,
-                                    # LEAP YEAR
-                                    autoadjust = NA,
-                                    leapyear = c(NA, "LeapYear", "LengthOfPeriod", "None"),
-                                    leapyear.coef = NA,
-                                    leapyear.coef.type = c(NA, "Estimated", "Fixed")) {
+set_tradingdays.default <- function(
+    x,
+    option = c(
+        NA,
+        "TradingDays",
+        "WorkingDays",
+        "TD2c",
+        "TD3",
+        "TD3c",
+        "TD4",
+        "None",
+        "UserDefined"
+    ),
+    calendar.name = NA,
+    uservariable = NA,
+    stocktd = NA,
+    test = c(NA, "None", "Remove", "Add", "Separate_T", "Joint_F"),
+    coef = NA,
+    coef.type = c(NA, "Estimated", "Fixed"),
+    automatic = c(NA, "Unused", "FTest", "WaldTest", "Aic", "Bic"),
+    # TRAMO SPECIFIC
+    pftd = NA,
+    # LEAP YEAR
+    autoadjust = NA,
+    leapyear = c(NA, "LeapYear", "LengthOfPeriod", "None"),
+    leapyear.coef = NA,
+    leapyear.coef.type = c(NA, "Estimated", "Fixed")
+) {
     td <- x$regression$td
 
     is_tramo <- inherits(x, "JD3_TRAMO_SPEC")
@@ -1294,8 +1376,15 @@ set_tradingdays.default <- function(x,
         option <- match.arg(
             toupper(option)[1],
             choices = c(
-                "TRADINGDAYS", "WORKINGDAYS", "NONE", "USERDEFINED",
-                "TD2C", "TD3", "TD3C", "TD4", "HOLIDAYS"
+                "TRADINGDAYS",
+                "WORKINGDAYS",
+                "NONE",
+                "USERDEFINED",
+                "TD2C",
+                "TD3",
+                "TD3C",
+                "TD4",
+                "HOLIDAYS"
             )
         )
         td$td <- switch(
@@ -1312,9 +1401,11 @@ set_tradingdays.default <- function(x,
     if (!missing(calendar.name) && !anyNA(calendar.name)) {
         td$holidays <- calendar.name
     }
-    if (!is.null(uservariable)
-        && !anyNA(uservariable)
-        && length(uservariable) > 0) {
+    if (
+        !is.null(uservariable) &&
+            !anyNA(uservariable) &&
+            length(uservariable) > 0
+    ) {
         td$td <- "TD_NONE"
         td$holidays <- ""
 
@@ -1398,7 +1489,10 @@ set_tradingdays.default <- function(x,
             toupper(leapyear),
             choices = c("LEAPYEAR", "LENGTHOFPERIOD", "NONE")
         )
-        if (leapyear != "LENGTHOFPERIOD" || (leapyear == "LENGTHOFPERIOD" && !is_tramo)) {
+        if (
+            leapyear != "LENGTHOFPERIOD" ||
+                (leapyear == "LENGTHOFPERIOD" && !is_tramo)
+        ) {
             # LENGTHOFPERIOD not available on TRAMO
             td$lp <- leapyear
         }
@@ -1457,7 +1551,9 @@ set_tradingdays.default <- function(x,
         td$lpcoefficient$value <- leapyear.coef
         td$lpcoefficient$type <- leapyear.coef.type
         if (td$test != "NO" && any(coef.type == "FIXED")) {
-            warning("You must set the test parameter to NONE to specify leapyear.coef")
+            warning(
+                "You must set the test parameter to NONE to specify leapyear.coef"
+            )
         }
     }
 
@@ -1494,7 +1590,7 @@ set_tradingdays.default <- function(x,
 #' \code{"Estimated"} =  coefficient is estimated,
 #' \code{"Fixed"} = the coefficients is fixed. By default the coefficient is
 #' estimated.
-#' @param type (TRAMO specific) a \code{character} that specifies the presence
+#' @param type (Tramo specific) a \code{character} that specifies the presence
 #' and the length of the Easter effect:
 #' \code{"Unused"} = the Easter effect is not considered;
 #' \code{"Standard"} = influences the period of \code{n} days strictly before
@@ -1509,7 +1605,7 @@ set_tradingdays.default <- function(x,
 #' @details
 #' \code{x} specification parameter must be a JD3_X13_SPEC" class object
 #' generated with \code{rjd3x13::x13_spec()} (or "JD3_REGARIMA_SPEC" generated
-#' with \code{rjd3x13::spec_regarima()} or "JD3_TRAMOSEATS_SPEC" generated with
+#' with \code{rjd3x13::spec_regarima()} or `"JD3_TRAMOSEATS_SPEC"` generated with
 #' \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
@@ -1530,25 +1626,31 @@ set_tradingdays.default <- function(x,
 #' )
 #'
 #' @export
-set_easter <- function(x, enabled = NA,
-                       julian = NA,
-                       duration = NA,
-                       test = c(NA, "Add", "Remove", "None"),
-                       coef = NA,
-                       coef.type = c(NA, "Estimated", "Fixed"),
-                       # TRAMO SPECIFIC
-                       type = c(NA, "Unused", "Standard", "IncludeEaster", "IncludeEasterMonday")) {
+set_easter <- function(
+    x,
+    enabled = NA,
+    julian = NA,
+    duration = NA,
+    test = c(NA, "Add", "Remove", "None"),
+    coef = NA,
+    coef.type = c(NA, "Estimated", "Fixed"),
+    # TRAMO SPECIFIC
+    type = c(NA, "Unused", "Standard", "IncludeEaster", "IncludeEasterMonday")
+) {
     UseMethod("set_easter", x)
 }
 #' @export
-set_easter.default <- function(x, enabled = NA,
-                               julian = NA,
-                               duration = NA,
-                               test = c(NA, "Add", "Remove", "None"),
-                               coef = NA,
-                               coef.type = c(NA, "Estimated", "Fixed"),
-                               # TRAMO SPECIFIC
-                               type = c(NA, "Unused", "Standard", "IncludeEaster", "IncludeEasterMonday")) {
+set_easter.default <- function(
+    x,
+    enabled = NA,
+    julian = NA,
+    duration = NA,
+    test = c(NA, "Add", "Remove", "None"),
+    coef = NA,
+    coef.type = c(NA, "Estimated", "Fixed"),
+    # TRAMO SPECIFIC
+    type = c(NA, "Unused", "Standard", "IncludeEaster", "IncludeEasterMonday")
+) {
     easter <- x$regression$easter
 
     # to set specific TRAMO/REGARIMA values
@@ -1560,7 +1662,8 @@ set_easter.default <- function(x, enabled = NA,
                 test <- match.arg(
                     toupper(test)[1],
                     choices = c("REMOVE", "ADD", "NONE")
-                ) != "NONE"
+                ) !=
+                    "NONE"
             }
             easter$test <- test
         } else {
@@ -1582,7 +1685,12 @@ set_easter.default <- function(x, enabled = NA,
         # TRAMO SPECIFIC
         type <- match.arg(
             toupper(type)[1],
-            choices = c("UNUSED", "STANDARD", "INCLUDEEASTER", "INCLUDEEASTERMONDAY")
+            choices = c(
+                "UNUSED",
+                "STANDARD",
+                "INCLUDEEASTER",
+                "INCLUDEEASTERMONDAY"
+            )
         )
         easter$type <- type
     }
@@ -1603,9 +1711,7 @@ set_easter.default <- function(x, enabled = NA,
     if (!missing(duration) && !is.na(duration)) {
         easter$duration <- duration
     }
-    if (missing(coef) || is.null(coef) || is.na(coef)) {
-
-    } else {
+    if (missing(coef) || is.null(coef) || is.na(coef)) {} else {
         if (missing(coef.type) || anyNA(coef.type)) {
             coef.type <- "FIXED"
         } else {
@@ -1638,7 +1744,7 @@ set_easter.default <- function(x, enabled = NA,
 #' in the test for the log-level specification (`fun = "Auto"`). By default to `FALSE`.
 #' @param aicdiff (REGARIMA/X-13 specific)  a numeric defining the difference in AICC needed to accept no transformation when the automatic
 #' transformation selection is chosen (considered only when \code{fun = "Auto"}). Default= -2.
-#' @param fct (TRAMO specific) \code{numeric} controlling the bias in the log/level pre-test:
+#' @param fct (Tramo specific) \code{numeric} controlling the bias in the log/level pre-test:
 #' \code{transform.fct}> 1 favours levels, \code{transform.fct}< 1 favours logs.
 #' Considered only when \code{fun = "Auto"}.
 #'
@@ -1646,7 +1752,7 @@ set_easter.default <- function(x, enabled = NA,
 #'
 #' @details
 #' \code{x} specification parameter must be a JD3_X13_SPEC" class object generated with \code{rjd3x13::x13_spec()}
-#' (or "JD3_REGARIMA_SPEC" generated with \code{rjd3x13::spec_regarima()} or "JD3_TRAMOSEATS_SPEC"
+#' (or "JD3_REGARIMA_SPEC" generated with \code{rjd3x13::spec_regarima()} or `"JD3_TRAMOSEATS_SPEC"`
 #' generated with \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
 #'
@@ -1661,25 +1767,29 @@ set_easter.default <- function(x, enabled = NA,
 #' new_spec <- set_transform(x = init_spec, fun = "Log", outliers = TRUE)
 #'
 #' @export
-set_transform <- function(x,
-                          fun = c(NA, "Auto", "Log", "None"),
-                          adjust = c(NA, "None", "LeapYear", "LengthOfPeriod"),
-                          outliers = NA,
-                          # REGARIMA SPECIFIC
-                          aicdiff = NA,
-                          # TRAMO SPECIFIC
-                          fct = NA) {
+set_transform <- function(
+    x,
+    fun = c(NA, "Auto", "Log", "None"),
+    adjust = c(NA, "None", "LeapYear", "LengthOfPeriod"),
+    outliers = NA,
+    # REGARIMA SPECIFIC
+    aicdiff = NA,
+    # TRAMO SPECIFIC
+    fct = NA
+) {
     UseMethod("set_transform", x)
 }
 #' @export
-set_transform.default <- function(x,
-                                  fun = c(NA, "Auto", "Log", "None"),
-                                  adjust = c(NA, "None", "LeapYear", "LengthOfPeriod"),
-                                  outliers = NA,
-                                  # REGARIMA SPECIFIC
-                                  aicdiff = NA,
-                                  # TRAMO SPECIFIC
-                                  fct = NA) {
+set_transform.default <- function(
+    x,
+    fun = c(NA, "Auto", "Log", "None"),
+    adjust = c(NA, "None", "LeapYear", "LengthOfPeriod"),
+    outliers = NA,
+    # REGARIMA SPECIFIC
+    aicdiff = NA,
+    # TRAMO SPECIFIC
+    fct = NA
+) {
     transform <- x$transform
 
     fun <- match.arg(
@@ -1722,38 +1832,54 @@ set_transform.default <- function(x,
 #'
 #' @description
 #' Function allowing to add any user-defined regressor to a specification and
-#' allocate its effect to a selected component, excepted to the calendar component.
-#' To add user-defined calendar regressors, \code{\link{set_tradingdays}}. Once added to
-#' a specification, the external regressor(s) will also have to be added to a modelling context
-#' before being used in an estimation process. see \code{\link{modelling_context}} and example.
+#' allocate its effect to a selected component, excepted to the calendar
+#' component. To add user-defined calendar regressors,
+#' \code{\link{set_tradingdays}}. Once added to a specification, the external
+#' regressor(s) will also have to be added to a modelling context before being
+#' used in an estimation process. see \code{\link{modelling_context}} and
+#' example.
 #'
 #' @inheritParams set_basic
-#' @param group,name the name of the regressor in the format `"group.name"`, by default `"r.name"` by default if `group` NULL
-#' `"group.name"` has to be the same as in \code{\link{modelling_context}} (see examples)
-#' @param label the label of the variable to be displayed when printing specification or results. By default equals to `group.name`.
+#' @param group,name the name of the regressors in the format `"group.name"`, by
+#'   default `"r.name"` by default if `group` NULL.
+#'   `"group.name"` has to be the same as in \code{\link{modelling_context}}
+#'   (see examples)
+#' @param label the label of the variable to be displayed when printing
+#'   specification or results. By default equals to `group.name`.
 #' @param lag integer defining if the user-defined variable should be lagged.
-#'  By default (`lag = 0`), the regressor \eqn{x_t} is not lagged. If `lag = 1`, then \eqn{x_{t-1}} is used.
+#'   By default (`lag = 0`), the regressor \eqn{x_t} is not lagged.
+#'   If `lag = 1`, then \eqn{x_{t-1}} is used.
 #' @param coef the coefficient, if needs to be fixed.
-#' @param regeffect component to which the effect of the user-defined variable will be assigned.
-#' By default (`"Undefined"`), see details.
+#' @param regeffect component to which the effect of the user-defined variable
+#'   will be assigned.
+#'   By default (`"Undefined"`), see details.
 #'
 #' @returns The modified specification (with new user-defined variables)
 #'
 #' @details
-#' \code{x} specification parameter must be a JD3_X13_SPEC" class object generated with \code{rjd3x13::x13_spec()}
-#' (or "JD3_REGARIMA_SPEC" generated with \code{rjd3x13::spec_regarima()} or "JD3_TRAMOSEATS_SPEC"
-#' generated with \code{rjd3tramoseats::spec_tramoseats()} or "JD3_TRAMO_SPEC" generated with
+#' \code{x} specification parameter must be a `JD3_X13_SPEC` class object
+#' generated with \code{rjd3x13::x13_spec()} (or `JD3_REGARIMA_SPEC` generated
+#' with \code{rjd3x13::spec_regarima()} or `JD3_TRAMOSEATS_SPEC` generated with
+#' \code{rjd3tramoseats::spec_tramoseats()} or `JD3_TRAMO_SPEC` generated with
 #' \code{rjd3tramoseats::spec_tramo()}).
+#'
 #' Components to which the effect of the regressor can be allocated:
-#' - \code{"Undefined"} : the effect of the regressor is assigned to an additional component,
-#' the variable is used to improve the pre-processing step, but is not removed from the series
-#' for the decomposition.
+#'
 #' \itemize{
-#'   \item \code{"Trend"}: after the decomposition the effect is allocated to the trend component, like a Level-Shift
-#'   \item \code{"Irregular"}: after the decomposition the effect is allocated to the irregular component, like an Additive-outlier
-#'   \item \code{"Seasonal"}: after the decomposition the effect is allocated to the seasonal component, like a Seasonal-outlier
-#'   \item \code{"Series"}: after the decomposition the effect is allocated to the raw series: \eqn{yc_t=y_t+ effect}
-#'   \item \code{"SeasonallyAdjusted"}: after the decomposition the effect is allocated to the seasonally adjusted series: \eqn{sa_t=T+I+effect}
+#'   \item \code{"Undefined"}: the effect of the regressor is assigned to an
+#'       additional component, the variable is used to improve the
+#'       pre-processing step, but is not removed from the series for the
+#'       decomposition.
+#'   \item \code{"Trend"}: after the decomposition the effect is allocated to
+#'       the trend component, like a Level-Shift
+#'   \item \code{"Irregular"}: after the decomposition the effect is allocated
+#'       to the irregular component, like an Additive-outlier
+#'   \item \code{"Seasonal"}: after the decomposition the effect is allocated
+#'       to the seasonal component, like a Seasonal-outlier
+#'   \item \code{"Series"}: after the decomposition the effect is allocated to
+#'       the raw series: \eqn{yc_t=y_t+ effect}
+#'   \item \code{"SeasonallyAdjusted"}: after the decomposition the effect is
+#'       allocated to the seasonally adjusted series: \eqn{sa_t=T+I+effect}
 #' }
 #'
 #' @examplesIf rjd3jars::check_java_version(silent = TRUE)
@@ -1791,63 +1917,193 @@ set_transform.default <- function(x,
 #'
 #' # Regressors have to be added one by one
 #' new_spec <- add_usrdefvar(init_spec, name = "reg1.iv1", regeffect = "Trend")
-#' new_spec <- add_usrdefvar(new_spec, name = "reg2.iv2", regeffect = "Trend", coef = 0.7)
+#' new_spec <- add_usrdefvar(new_spec, name = "reg2.iv2", regeffect = "Trend",
+#'                           coef = 0.7)
 #'
 #' @seealso \code{\link{set_tradingdays}}, \code{\link{intervention_variable}}
 #' @references
-#' More information on outliers and other auxiliary variables in JDemetra+ online documentation:
-#' \url{https://doc.jdemetra.org/a-outlier-detection}
+#' More information on outliers and other auxiliary variables in JDemetra+
+#' online documentation: \url{https://doc.jdemetra.org/a-outlier-detection}
 #' @export
-add_usrdefvar <- function(x,
-                          group = "r",
-                          name,
-                          label = paste0(group, ".", name),
-                          lag = 0,
-                          coef = NULL,
-                          regeffect = c("Undefined", "Trend", "Seasonal", "Irregular", "Series", "SeasonallyAdjusted")) {
+add_usrdefvar <- function(
+    x,
+    group = "r",
+    name,
+    label = paste0(group, ".", name),
+    lag = 0,
+    coef = NULL,
+    regeffect = c(
+        "Undefined",
+        "Trend",
+        "Seasonal",
+        "Irregular",
+        "Series",
+        "SeasonallyAdjusted"
+    )
+) {
     UseMethod("add_usrdefvar", x)
 }
 
+#' @importFrom checkmate assert_character
+#' @importFrom checkmate assert_scalar
+#' @importFrom checkmate assert_integerish
+#' @importFrom checkmate assert_numeric
 #' @export
-add_usrdefvar.default <- function(x,
-                                  group = "r",
-                                  name,
-                                  label = paste0(group, ".", name),
-                                  lag = 0,
-                                  coef = NULL,
-                                  regeffect = c("Undefined", "Trend", "Seasonal", "Irregular", "Series", "SeasonallyAdjusted")) {
+add_usrdefvar.default <- function(
+    x,
+    group = "r",
+    name,
+    label = NULL,
+    lag = NULL,
+    coef = NULL,
+    regeffect = NULL
+) {
+    # Check group
+    checkmate::assert_character(group)
+    checkmate::assert_scalar(group)
+    group <- group |>
+        replace_wrong_names() |>
+        complete_names(pattern = "g")
+
+    # Check name
+    checkmate::assert_character(name)
+    name <- name |>
+        replace_wrong_names() |>
+        complete_names(pattern = "x")
+
+    # Check label
+    if (is.null(label)) {
+        label <- paste0(group, ".", name)
+    } else {
+        checkmate::assert_character(label)
+        stopifnot(length(name) == length(label))
+    }
+
+    # Check lag
+    if (is.null(lag)) {
+        lag <- rep(0L, length(name))
+    } else {
+        checkmate::assert_integerish(lag, lower = 0L)
+        if (length(lag) == 1L) {
+            lag <- rep(lag, length(name))
+        } else {
+            stopifnot(length(name) == length(lag))
+        }
+    }
+
+    # Check coef
+    if (!is.null(coef)) {
+        checkmate::assert_numeric(coef)
+        if (length(coef) == 1L) {
+            coef <- rep(coef, length(name))
+        } else {
+            stopifnot(length(name) == length(coef))
+        }
+    }
+
+    # Check regeffect
+    if (is.null(regeffect)) {
+        regeffect <- rep("Undefined", length(name))
+    } else {
+        checkmate::assert_character(regeffect)
+        if (length(regeffect) == 1L) {
+            regeffect <- rep(regeffect, length(name))
+        } else {
+            stopifnot(
+                length(name) == length(regeffect),
+                regeffect %in%
+                    c(
+                        "Undefined",
+                        "Trend",
+                        "Seasonal",
+                        "Irregular",
+                        "Series",
+                        "SeasonallyAdjusted"
+                    )
+            )
+        }
+    }
+
+    if (length(name) > 1L) {
+        x <- Reduce(
+            f = \(.x, k) {
+                add_usrdefvar(
+                    x = .x,
+                    name = name[k],
+                    group = group,
+                    label = label[k],
+                    lag = lag[k],
+                    coef = coef[k],
+                    regeffect = regeffect[k]
+                )
+            },
+            x = seq_along(name),
+            init = x
+        )
+        return(x)
+    }
+
     x$regression$users[[length(x$regression$users) + 1]] <-
-        .create_variable(id = paste0(group, ".", name), label = label, lag = lag, coef = coef, regeffect = regeffect)
+        .create_variable(
+            id = paste0(group, ".", name),
+            label = label,
+            lag = lag,
+            coef = coef,
+            regeffect = regeffect
+        )
     x
 }
 
 # read in protofile
 .create_variable <- function(
-        id,
-        label = NULL,
-        lag = 0,
-        coef = NULL,
-        regeffect = c("Undefined", "Trend", "Seasonal", "Irregular",
-                      "Series", "SeasonallyAdjusted")) {
+    id,
+    label = NULL,
+    lag = 0,
+    coef = NULL,
+    regeffect = c(
+        "Undefined",
+        "Trend",
+        "Seasonal",
+        "Irregular",
+        "Series",
+        "SeasonallyAdjusted"
+    )
+) {
     regeffect <- match.arg(regeffect)
     if (is.null(label)) {
         label <- id
     }
-    res <- list(id = id, name = label, lag = lag, coef = .fixed_parameter(coef), regeffect = regeffect)
+    res <- list(
+        id = id,
+        name = label,
+        lag = lag,
+        coef = .fixed_parameter(coef),
+        regeffect = regeffect
+    )
     return(res)
 }
 
 
-set_span <- function(x,
-                     type = c("All", "From", "To", "Between", "Last", "First", "Excluding"),
-                     d0 = NULL,
-                     d1 = NULL,
-                     n0 = 0L,
-                     n1 = 0L) {
+set_span <- function(
+    x,
+    type = c("All", "From", "To", "Between", "Last", "First", "Excluding"),
+    d0 = NULL,
+    d1 = NULL,
+    n0 = 0L,
+    n1 = 0L
+) {
     if (!missing(type) && !is.null(type) && !is.na(type[1])) {
         type <- match.arg(
             toupper(type),
-            choices = c("ALL", "FROM", "TO", "BETWEEN", "LAST", "FIRST", "EXCLUDING")
+            choices = c(
+                "ALL",
+                "FROM",
+                "TO",
+                "BETWEEN",
+                "LAST",
+                "FIRST",
+                "EXCLUDING"
+            )
         )
         if (type == "ALL") {
             x$type <- type
