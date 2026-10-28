@@ -1,13 +1,14 @@
 Type: Package
 Package: rjd3toolkit
 Title: Utility Functions Around 'JDemetra+ 3.0'
-Version: 3.9.0
+Version: 3.9.1
 Authors@R: c(
     person("Jean", "Palate", , "palatejean@gmail.com", role = "aut"),
     person("Alain", "Quartier-la-Tente", , "alain.quartier@yahoo.fr", role = "aut",
            comment = c(ORCID = "0000-0001-7890-3857")),
     person("Tanguy", "Barthelemy", , "timeserieswithjdemetraandr@gmail.com", role = c("aut", "cre", "art", "cph")),
-    person("Anna", "Smyk", , "anna.smyk@insee.fr", role = "aut")
+    person("Anna", "Smyk", , "anna.smyk@insee.fr", role = "aut"),
+    person("Eulalie", "Delaune", , "eulalie.delaune-virrion@insee.fr", role = "aut")
   )
 Description: R Interface to 'JDemetra+ 3.x'
     (<https://github.com/jdemetra>) time series analysis software.  It
@@ -25,7 +26,7 @@ Depends: R (>= 4.1)
 Imports: checkmate, graphics, methods, rJava (>= 1.0-6), rjd3jars (>=
         0.0.6), RProtoBuf (>= 0.4.25), stats, utils
 Suggests: spelling, testthat (>= 3.0.0)
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-GB
@@ -40,12 +41,13 @@ Collate: 'utils.R' 'jd2r.R' 'protobuf.R' 'arima.R' 'calendars.R'
         'splines.R' 'tests_regular.R' 'tests_seasonality.R'
         'tests_td.R' 'timeseries.R' 'variables.R' 'zzz.R'
 NeedsCompilation: no
-Packaged: 2026-09-18 16:47:41 UTC; SHT3RT
+Packaged: 2026-10-28 15:02:06 UTC; SHT3RT
 Author: Jean Palate [aut],
   Alain Quartier-la-Tente [aut] (ORCID:
     <https://orcid.org/0000-0001-7890-3857>),
   Tanguy Barthelemy [aut, cre, art, cph],
-  Anna Smyk [aut]
+  Anna Smyk [aut],
+  Eulalie Delaune [aut]
 Maintainer: Tanguy Barthelemy <timeserieswithjdemetraandr@gmail.com>
 Repository: CRAN
-Date/Publication: 2026-09-21 10:00:02 UTC
+Date/Publication: 2026-10-28 15:40:02 UTC
